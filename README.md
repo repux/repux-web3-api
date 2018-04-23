@@ -8,7 +8,7 @@
 import Web3 from 'web3';
 import IpfsAPI from 'ipfs-api';
 import { Repux } from 'repux';
-let web3 = new Web3(new Web3.providers.HttpProvider('http:127.0.0.1:9545'));
+let web3 = new Web3(new Web3.providers.HttpProvider('http://local.dev.ico.repux:8545'));
 web3.eth.defaultAccount = '0x627306090abaB3A6e2400e9345bC60c78a8BEf57';
 const repux = new RepuX(web3, new IpfsAPI({
     host: '127.0.0.1',
