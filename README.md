@@ -6,25 +6,35 @@
 ## Example usage
 ```javascript
 import Web3 from 'web3';
-import IpfsApi from 'ipfs-api';
-import{ Repux } from 'repux';
+import IpfsAPI from 'ipfs-api';
+import { Repux } from 'repux';
+let web3 = new Web3(new Web3.providers.HttpProvider('http:127.0.0.1:9545'));
+web3.eth.defaultAccount = '0x627306090abaB3A6e2400e9345bC60c78a8BEf57';
+const repux = new RepuX(web3, new IpfsAPI({
+    host: '127.0.0.1',
+    port: 5002,
+    protocol: 'http'
+}));
+const balance = await repux.getBalance();
+console.log(balance);
 ```
 
 ## Development
-Run following commands:
+1. Create symbolic link:
+```
+ln -s /path/to/compiled/contracts ./contracts 
+```
+
+2. Run ethereum node, compile and migrate contracts.
+
+3. Run following commands:
 ```bash
-npm install -g truffle ipfs http-server
+npm install -g ipfs http-server
 npm install
 ipfs daemon
 ```
 
-In other terminal window:
-```bash
-truffle develop
-truffle migrate --reset
-```
-
-And to build library run:
+4. And to build library run:
 ```bash
 npm webpack
 ```

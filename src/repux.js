@@ -1,13 +1,14 @@
 import BigNumber from 'bignumber.js';
 import contract from 'truffle-contract';
-import Registry_artifacts from '../build/contracts/Registry';
-import DemoToken_artifacts from '../build/contracts/DemoToken';
-import DataProduct_artifacts from '../build/contracts/DataProduct';
-import ERC20_artifacts from '../build/contracts/ERC20';
+import Registry_artifacts from '../contracts/Registry';
+import DemoToken_artifacts from '../contracts/DemoToken';
+import DataProduct_artifacts from '../contracts/DataProduct';
+import ERC20_artifacts from '../contracts/ERC20';
 import { Product } from './product';
 import { FileUploader } from './file-uploader';
 import { FileDownloader } from './file-downloader';
 import packageConfig from '../package';
+import { ERRORS } from './errors';
 
 const Registry = contract(Registry_artifacts);
 const DemoToken = contract(DemoToken_artifacts);
@@ -107,12 +108,9 @@ class RepuX {
         }
 
         return this._registry.createDataProduct(
-            product.name,
-            product.description,
-            product.ipfsHash,
-            product.category,
+            'We can\'t provide any fileHash because we have multiple chunks instead of single file',
+            product.metaHash,
             product.price,
-            product.size,
             {
                 from: account,
                 gas: PRODUCT_CREATION_GAS_PRICE
@@ -135,24 +133,8 @@ class RepuX {
      */
     async getProduct(productAddress) {
         const instance = await DataProduct.at(productAddress);
-        const rawProduct = await instance.getDataProduct();
 
-        return Product.createFromRawData(rawProduct, productAddress);
-    }
-
-    /**
-     * Approves tokens transfer (should be called before purchaseProduct)
-     * @param {Product} product - Product
-     * @param {string} [account=web3.eth.defaultAccount] - Account address
-     * @returns {boolean}
-     */
-    async approveTokensForProduct(product, account) {
-        if (!account) {
-            account = this.getDefaultAccount();
-        }
-
-        const tokenInstance = await ERC20.at(this._token.address);
-        return tokenInstance.approve(product.address, product.price, { from: account });
+        return Product.createFromDataProduct(instance);
     }
 
     /**
@@ -161,40 +143,34 @@ class RepuX {
      * @param {string} [account=web3.eth.defaultAccount] - Account address
      * @returns {Promise<*>}
      */
-    async purchaseProduct(productAddress, account) {
-        if (!account) {
-            account = this.getDefaultAccount();
-        }
-
-        const instance = await DataProduct.at(productAddress);
-        return instance.purchase({
-            gas: PRODUCT_PURCHASE_GAS_PRICE,
-            from: account
-        });
+    purchaseProduct(productAddress, account) {
+        throw new Error(ERRORS.METHOD_NOT_IMPLEMENTED);
     }
 
     /**
      * Uploads and encrypts file
-     * @param {string} password - Password to encrypt file
+     * @param {string} password - Password to encrypt file with AES-CBC algorithm
+     * @param {Object} publicKey - Public key in JWK (JSON Web Key) format to encrypt first chunk of file with RSA-OAEP algorithm
      * @param {File} file - file to upload
      * @returns {FileUploader}
      */
-    uploadFile(password, file) {
+    uploadFile(password, publicKey, file) {
         const fileUploader = new FileUploader(this._ipfs);
-        fileUploader.upload(password, file);
+        fileUploader.upload(password, publicKey, file);
 
         return fileUploader;
     }
 
     /**
      * Downloads and decrypts file
-     * @param password
-     * @param ipfsHash
+     * @param {string} password - Password to decrypt file with AES-CBC algorithm
+     * @param {Object} privateKey - Public key in JWK (JSON Web Key) format to decrypt first chunk of file with RSA-OAEP algorithm
+     * @param ipfsHash - IPFS hash to meta file
      * @returns {FileDownloader}
      */
-    downloadFile(password, ipfsHash) {
+    downloadFile(password, privateKey, ipfsHash) {
         const fileDownloader = new FileDownloader(this._ipfs);
-        fileDownloader.download(password, ipfsHash);
+        fileDownloader.download(password, privateKey, ipfsHash);
 
         return fileDownloader;
     }

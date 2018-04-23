@@ -1,4 +1,4 @@
-import { ProgressCrypto } from './progress-crypto';
+import { INITIALIZATION_VECTOR, ProgressCrypto } from './progress-crypto';
 import { Buffer } from 'buffer';
 import { ERRORS } from './errors';
 
@@ -8,7 +8,7 @@ export class FileUploader extends ProgressCrypto {
         this.ipfs = ipfs;
     }
 
-    upload(password, file) {
+    upload(password, publicKey, file) {
         this.isUploadFinished = false;
         this.file = file;
 
@@ -16,7 +16,7 @@ export class FileUploader extends ProgressCrypto {
             return this.emit('error', ERRORS.FILE_NOT_SPECIFIED);
         }
 
-        this.crypt('encrypt', password, file)
+        this.crypt('encrypt', password, INITIALIZATION_VECTOR, publicKey, file);
     }
 
     onChunkCrypted(chunk) {

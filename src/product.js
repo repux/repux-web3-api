@@ -3,36 +3,24 @@ import BigNumber from 'bignumber.js';
 export class Product {
     /**
      *
-     * @param {string} name - Product name
+     * @param {string} metaHash - Product meta IPFS Hash
      * @param {BigNumber} price - Product price in Wei
-     * @param {string} ipfsHash - Product file IPFS Hash
-     * @param {string} [description=''] - Product description
-     * @param {string} [category=''] - Product category
-     * @param {number} [size=0] - Product file size in bytes
      */
-    constructor(name, price, ipfsHash, description, category, size) {
-        this.name = name;
+    constructor(metaHash, price) {
+        this.metaHash = metaHash;
         this.price = price;
-        this.ipfsHash = ipfsHash;
-        this.description = description || '';
-        this.category = category || '';
-        this.size = size || 0;
     }
 
-    static createFromRawData(rawData, address) {
+    /**
+     * Converts DataProduct instance to Product instance
+     * @param {DataProduct} dataProduct - DataProduct instance
+     * @returns {Promise<Product>}
+     */
+    static async createFromDataProduct(dataProduct) {
         const product = new Product();
-        product.owner = rawData[0];
-        product.name = rawData[1];
-        product.description = rawData[2];
-        product.ipfsHash = rawData[3];
-        product.category = rawData[4];
-        product.price = rawData[5];
-        product.size = parseInt(rawData[6].valueOf());
-        product.totalRating = rawData[7];
-        product.rateCount = rawData[8];
-        product.purchaseCount = rawData[9];
-        product.ownership = rawData[10];
-        product.address = address;
+        product.address = dataProduct.address;
+        product.metaHash = await dataProduct.metaHash();
+        product.price = await dataProduct.price();
 
         return product;
     }
