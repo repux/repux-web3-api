@@ -13,12 +13,14 @@ export async function decryptionWorker([ bytes, passwordKey, initializationVecto
     const startTime = (new Date()).getTime();
     let vector = initializationVector;
 
-    function getVector(encryptedChunk, bytes) {
+    function getVector(decryptedChunk, bytes) {
         const vector = new Uint8Array(options.VECTOR_SIZE);
 
         for (let i = 0; i < options.VECTOR_SIZE; i++) {
-            vector[i] = encryptedChunk[i] ^ bytes[i];
+            vector[i] = decryptedChunk[i] ^ bytes[i];
         }
+
+        return vector;
     }
 
     async function decryptFirstChunk(bytes) {
@@ -37,7 +39,7 @@ export async function decryptionWorker([ bytes, passwordKey, initializationVecto
             bytes
         );
 
-        vector = getVector(decryptedChunk, bytes);
+        vector = getVector(new Uint8Array(decryptedChunk), bytes);
 
         progress({ chunk: decryptedChunk, number: 0, vector });
         progress({ time: (new Date()).getTime() - startTime, progress: 1 });

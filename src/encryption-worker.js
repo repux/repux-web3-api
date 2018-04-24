@@ -22,6 +22,8 @@ export function encryptionWorker ([file, passwordKey, initializationVector, publ
         for (let i = 0; i < options.VECTOR_SIZE; i++) {
             vector[i] = encryptedChunk[i] ^ bytes[i];
         }
+
+        return vector;
     }
 
     async function encryptFirstChunk(bytes) {
@@ -39,17 +41,17 @@ export function encryptionWorker ([file, passwordKey, initializationVector, publ
         const encryptedChunk = await crypto.subtle.encrypt(
             alg,
             passwordKey,
-            new Uint8Array(bytes)
+            bytes
         );
 
-        vector = getVector(encryptedChunk, bytes);
+        vector = getVector(new Uint8Array(encryptedChunk), bytes);
 
          if (offset === 0) {
              // Encrypt first chunk with asymmetric key
              await encryptFirstChunk(new Uint8Array(encryptedChunk.slice(0, options.FIRST_CHUNK_SIZE)));
 
              if (encryptedChunk.byteLength > options.FIRST_CHUNK_SIZE) {
-                 tmp = new Uint8Array(encryptedChunk.slice(options.FIRST_CHUNK_SIZE, options.CHUNK_SIZE));
+                 tmp = new Uint8Array(encryptedChunk.slice(options.FIRST_CHUNK_SIZE));
              }
          } else {
              tmp = encryptedChunk;
