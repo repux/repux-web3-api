@@ -2,13 +2,13 @@ const path = require('path');
 
 module.exports = {
     entry: {
-        ['lib/repux']: ['./src/repux.js'],
+        ['lib/index']: ['./src/repux-web3-api.js'],
         ['tests/index']: ['./test/run.js']
     },
     devtool: 'source-map',
     output: {
         path: path.resolve(__dirname, 'build'),
-        library: 'RepuXJsApi',
+        library: 'repux-web3-api',
         libraryTarget: 'umd',
         umdNamedDefine: true
     },

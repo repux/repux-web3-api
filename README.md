@@ -1,20 +1,15 @@
-# RepuX JavaScript API
+# RepuX Web3 API
 
 ## Installation
-//TODO
+
 
 ## Example usage
 ```javascript
 import Web3 from 'web3';
-import IpfsAPI from 'ipfs-api';
-import { Repux } from 'repux';
+import { RepuxWeb3Api } from 'repux-web3-api';
 let web3 = new Web3(new Web3.providers.HttpProvider('http://local.dev.ico.repux:8545'));
 web3.eth.defaultAccount = '0x627306090abaB3A6e2400e9345bC60c78a8BEf57';
-const repux = new RepuX(web3, new IpfsAPI({
-    host: '127.0.0.1',
-    port: 5002,
-    protocol: 'http'
-}));
+const repux = new RepuxWeb3Api(web3);
 const balance = await repux.getBalance();
 console.log(balance);
 ```
@@ -29,9 +24,8 @@ ln -s /path/to/compiled/contracts ./contracts
 
 3. Run following commands:
 ```bash
-npm install -g ipfs http-server
+npm install -g http-server
 npm install
-ipfs daemon
 ```
 
 4. And to build library run:

@@ -5,8 +5,6 @@ import DemoToken_artifacts from '../contracts/DemoToken';
 import DataProduct_artifacts from '../contracts/DataProduct';
 import ERC20_artifacts from '../contracts/ERC20';
 import { Product } from './product';
-import { FileUploader } from './file-uploader';
-import { FileDownloader } from './file-downloader';
 import packageConfig from '../package';
 import { ERRORS } from './errors';
 
@@ -34,16 +32,14 @@ function fixTruffleContractCompatibilityIssue(web3) {
 /**
  * Repux API
  */
-class RepuX {
+class RepuxWeb3Api {
 
     /**
      * @param {Web3} web3 - Web3 instance
-     * @param {IpfsAPI} ipfs - IpfsAPI instance
      */
-    constructor(web3, ipfs) {
+    constructor(web3) {
         this._web3 = fixTruffleContractCompatibilityIssue(web3);
         this._provider = this._web3.currentProvider;
-        this._ipfs = ipfs;
 
         Registry.setProvider(this._provider);
         DemoToken.setProvider(this._provider);
@@ -146,37 +142,9 @@ class RepuX {
     purchaseProduct(productAddress, account) {
         throw new Error(ERRORS.METHOD_NOT_IMPLEMENTED);
     }
-
-    /**
-     * Uploads and encrypts file
-     * @param {string} password - Password to encrypt file with AES-CBC algorithm
-     * @param {Object} publicKey - Public key in JWK (JSON Web Key) format to encrypt first chunk of file with RSA-OAEP algorithm
-     * @param {File} file - file to upload
-     * @returns {FileUploader}
-     */
-    uploadFile(password, publicKey, file) {
-        const fileUploader = new FileUploader(this._ipfs);
-        fileUploader.upload(password, publicKey, file);
-
-        return fileUploader;
-    }
-
-    /**
-     * Downloads and decrypts file
-     * @param {string} password - Password to decrypt file with AES-CBC algorithm
-     * @param {Object} privateKey - Public key in JWK (JSON Web Key) format to decrypt first chunk of file with RSA-OAEP algorithm
-     * @param ipfsHash - IPFS hash to meta file
-     * @returns {FileDownloader}
-     */
-    downloadFile(password, privateKey, ipfsHash) {
-        const fileDownloader = new FileDownloader(this._ipfs);
-        fileDownloader.download(password, privateKey, ipfsHash);
-
-        return fileDownloader;
-    }
 }
 
 export {
-    RepuX,
+    RepuxWeb3Api,
     Product
 }

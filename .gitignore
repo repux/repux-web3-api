@@ -1,4 +1,4 @@
-build/
 node_modules/
 .idea/
-contracts/
+contracts
+build/tests/

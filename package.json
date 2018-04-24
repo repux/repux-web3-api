@@ -1,7 +1,17 @@
 {
-  "name": "RepuXJsApi",
+  "name": "repux-web3-api",
   "version": "0.1.0",
-  "description": "JavaScript implementation of RepuX protocol",
+  "description": "Smart Contract RepuX API",
+  "author": "RepuX <support@repux.io>",
+  "license": "MIT",
+  "main": "build/lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/repux/repux-web3-api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/repux/repux-web3-api/issues"
+  },
   "keywords": [
     "repux",
     "data",
@@ -14,14 +24,10 @@
     "test": "mocha --compilers js:babel-core/register --colors -w ./test/*"
   },
   "devDependencies": {
-    "aes-js": "^3.1.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
-    "buffer": "^5.1.0",
-    "ipfs-api": "^20.0.0",
     "mocha": "^5.1.0",
-    "threads": "^0.10.1",
     "web3": "^1.0.0-beta.34",
     "webpack": "^4.5.0",
     "webpack-cli": "^2.0.14"
