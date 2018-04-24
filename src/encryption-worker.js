@@ -16,6 +16,14 @@ export function encryptionWorker ([file, passwordKey, initializationVector, publ
     const reader = new FileReader();
     let vector = initializationVector;
 
+    function getVector(encryptedChunk, bytes) {
+        const vector = new Uint8Array(options.VECTOR_SIZE);
+
+        for (let i = 0; i < options.VECTOR_SIZE; i++) {
+            vector[i] = encryptedChunk[i] ^ bytes[i];
+        }
+    }
+
     async function encryptFirstChunk(bytes) {
         const encryptedChunk = await crypto.subtle.encrypt({ name: 'RSA-OAEP' }, publicKey, bytes);
         progress({ chunk: encryptedChunk, number: 0 });
@@ -34,7 +42,7 @@ export function encryptionWorker ([file, passwordKey, initializationVector, publ
             new Uint8Array(bytes)
         );
 
-        vector = new Uint8Array(encryptedChunk.slice(bytes.byteLength - options.VECTOR_SIZE, bytes.byteLength));
+        vector = getVector(encryptedChunk, bytes);
 
          if (offset === 0) {
              // Encrypt first chunk with asymmetric key

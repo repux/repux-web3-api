@@ -36,7 +36,7 @@ ipfs daemon
 
 4. And to build library run:
 ```bash
-npm webpack
+npx webpack
 ```
 
 ## Tests

@@ -13,6 +13,14 @@ export async function decryptionWorker([ bytes, passwordKey, initializationVecto
     const startTime = (new Date()).getTime();
     let vector = initializationVector;
 
+    function getVector(encryptedChunk, bytes) {
+        const vector = new Uint8Array(options.VECTOR_SIZE);
+
+        for (let i = 0; i < options.VECTOR_SIZE; i++) {
+            vector[i] = encryptedChunk[i] ^ bytes[i];
+        }
+    }
+
     async function decryptFirstChunk(bytes) {
         const decryptedChunk = await crypto.subtle.decrypt({ name: 'RSA-OAEP' }, privateKey, bytes);
         progress({ chunk: decryptedChunk, number: 0, vector });
@@ -29,7 +37,7 @@ export async function decryptionWorker([ bytes, passwordKey, initializationVecto
             bytes
         );
 
-        vector = new Uint8Array(decryptedChunk.slice(bytes.byteLength - options.VECTOR_SIZE, bytes.byteLength));
+        vector = getVector(decryptedChunk, bytes);
 
         progress({ chunk: decryptedChunk, number: 0, vector });
         progress({ time: (new Date()).getTime() - startTime, progress: 1 });
