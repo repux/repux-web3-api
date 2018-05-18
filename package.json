@@ -22,7 +22,8 @@
     "build": "WEBPACK_ENV=build webpack --mode production",
     "dev": "WEBPACK_ENV=dev webpack --mode development --progress --colors --watch",
     "test": "karma start --single-run --browsers ChromeHeadless",
-    "test:watch": "karma start --auto-watch --browsers ChromeHeadless"
+    "test:watch": "karma start --auto-watch --browsers ChromeHeadless",
+    "release": "semantic-release"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
