@@ -1,3 +1,5 @@
-export const TEST_ACCOUNT_ADDRESS = '0x107A1dC2a74aDB3C0FDDDB20614b1bDABF35A8a8';
-export const TEST_ACCOUNT_ADDRESS_2 = '0x88df059042a61ef49a0b989974f25a5df63523f3';
-export const BLOCKCHAIN_URL = 'http://local.dev.ico.repux:8545';
+export default {
+    ETH_NODE_URL: 'http://localhost:8545',
+    REGISTRY_CONTRACT_ADDRESS: '0x4ca80dfaaef31c2d7c0b5974775e86bfa86a6c70',
+    DEMOTOKEN_CONTRACT_ADDRESS: '0x618231c15b548292abc0013da5e24bab350c86d2'
+};

@@ -1,26 +1,16 @@
-import BigNumber from 'bignumber.js';
 import contract from 'truffle-contract';
-import Registry_artifacts from '../contracts/Registry';
-import DemoToken_artifacts from '../contracts/DemoToken';
-import DataProduct_artifacts from '../contracts/DataProduct';
-import ERC20_artifacts from '../contracts/ERC20';
-import { Product } from './product';
+import RegistryArtifacts from '../contracts/Registry';
+import DemoTokenArtifacts from '../contracts/DemoToken';
 import packageConfig from '../package';
-import { ERRORS } from './errors';
 
-const Registry = contract(Registry_artifacts);
-const DemoToken = contract(DemoToken_artifacts);
-const ERC20 = contract(ERC20_artifacts);
-const DataProduct = contract(DataProduct_artifacts);
-
-const PRODUCT_CREATION_GAS_PRICE = 4000000;
-const PRODUCT_PURCHASE_GAS_PRICE = 4000000;
+const Registry = contract(RegistryArtifacts);
+const DemoToken = contract(DemoTokenArtifacts);
 
 // Workaround for a compatibility issue between web3@1.0.0-beta.29 and truffle-contract@3.0.3
 // https://github.com/trufflesuite/truffle-contract/issues/57#issuecomment-331300494
 function fixTruffleContractCompatibilityIssue(web3) {
-    if (typeof web3.currentProvider.sendAsync !== "function") {
-        web3.currentProvider.sendAsync = function() {
+    if (typeof web3.currentProvider.sendAsync !== 'function') {
+        web3.currentProvider.sendAsync = function () {
             return web3.currentProvider.send.apply(
                 web3.currentProvider, arguments
             );
@@ -32,19 +22,33 @@ function fixTruffleContractCompatibilityIssue(web3) {
 /**
  * Repux API
  */
-class RepuxWeb3Api {
-
+export default class RepuxWeb3Api {
     /**
      * @param {Web3} web3 - Web3 instance
+     * @param {Object} contracts
      */
-    constructor(web3) {
+    constructor(web3, contracts = {}) {
+        if (typeof web3 === 'undefined') {
+            throw new Error('web3 instance is required!');
+        }
+
+        if (!contracts.REGISTRY_CONTRACT_ADDRESS) {
+            throw new Error('Repux Registry contract address should be set!');
+        }
+
+        this._registryContractAddress = contracts.REGISTRY_CONTRACT_ADDRESS;
+
+        if (!contracts.DEMOTOKEN_CONTRACT_ADDRESS) {
+            throw new Error('Repux DemoToken contract address should be set!');
+        }
+
+        this._demoTokenContractAddress = contracts.DEMOTOKEN_CONTRACT_ADDRESS;
+
         this._web3 = fixTruffleContractCompatibilityIssue(web3);
         this._provider = this._web3.currentProvider;
 
         Registry.setProvider(this._provider);
         DemoToken.setProvider(this._provider);
-        ERC20.setProvider(this._provider);
-        DataProduct.setProvider(this._provider);
     }
 
     /**
@@ -52,15 +56,14 @@ class RepuxWeb3Api {
      * Should be called once before any operation.
      * @returns {Promise<void>}
      */
-    async initialize() {
+    async init() {
         if (this._initialized) {
             return;
         }
 
         this._initialized = true;
-
-        this._registry = await Registry.deployed();
-        this._token = await DemoToken.deployed();
+        this._registry = await Registry.at(this._registryContractAddress);
+        this._token = await DemoToken.at(this._demoTokenContractAddress);
     }
 
     /**
@@ -76,7 +79,7 @@ class RepuxWeb3Api {
      * @returns {string} Default account
      */
     getDefaultAccount() {
-        return this._web3.eth.defaultAccount;
+        return this._web3.eth.accounts[0];
     }
 
     /**
@@ -88,63 +91,6 @@ class RepuxWeb3Api {
         if (!account) {
             account = this.getDefaultAccount();
         }
-
         return this._token.balanceOf(account);
     }
-
-    /**
-     * Creates product contract
-     * @param {Product} product - Product
-     * @param {string} [account=web3.eth.defaultAccount] - Account address
-     * @returns {Promise<*>}
-     */
-    createProduct(product, account) {
-        if (!account) {
-            account = this.getDefaultAccount();
-        }
-
-        return this._registry.createDataProduct(
-            'We can\'t provide any fileHash because we have multiple chunks instead of single file',
-            product.metaHash,
-            product.price,
-            {
-                from: account,
-                gas: PRODUCT_CREATION_GAS_PRICE
-            }
-        )
-    }
-
-    /**
-     * Returns all products addresses
-     * @returns {Promise<Array[string]>}
-     */
-    getProductAddresses() {
-        return this._registry.getDataProducts();
-    }
-
-    /**
-     * Returns products data by address
-     * @param {string} productAddress - Product address
-     * @returns {Promise<Array[string]>}
-     */
-    async getProduct(productAddress) {
-        const instance = await DataProduct.at(productAddress);
-
-        return Product.createFromDataProduct(instance);
-    }
-
-    /**
-     * Purchases product
-     * @param {string} productAddress - Product address
-     * @param {string} [account=web3.eth.defaultAccount] - Account address
-     * @returns {Promise<*>}
-     */
-    purchaseProduct(productAddress, account) {
-        throw new Error(ERRORS.METHOD_NOT_IMPLEMENTED);
-    }
-}
-
-export {
-    RepuxWeb3Api,
-    Product
 }

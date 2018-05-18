@@ -2,10 +2,9 @@ const path = require('path');
 
 module.exports = {
     entry: {
-        ['lib/index']: ['./src/repux-web3-api.js'],
-        ['tests/index']: ['./test/run.js']
+        'lib/index': './src/repux-web3-api.js'
     },
-    devtool: 'source-map',
+    devtool: 'cheap-module-source-map',
     output: {
         path: path.resolve(__dirname, 'build'),
         library: 'repux-web3-api',
@@ -17,12 +16,12 @@ module.exports = {
             {
                 test: /\.js$/,
                 include: [/node_modules\/promisify-es6/],
-                use: [ {
+                use: [{
                     loader: 'babel-loader',
                     query: {
-                        presets: [ 'env' ]
+                        presets: ['env']
                     }
-                } ]
+                }]
             }
         ]
     }
