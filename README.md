@@ -42,7 +42,6 @@ const repuxWeb3Api = new RepuxWeb3Api(web3, {
     DEMOTOKEN_CONTRACT_ADDRESS: '0x618231c15b548292abc0013da5e24bab350c86d2'
 });
 
-await repuxWeb3Api.init();
 const balance = await repuxWeb3Api.getBalance();
 
 console.log(balance);
