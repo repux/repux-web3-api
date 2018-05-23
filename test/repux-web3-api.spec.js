@@ -39,16 +39,6 @@ describe('RepuX Web3 API', () => {
         });
     });
 
-    describe('init()', () => {
-        it('should initialize library', async () => {
-            await repuxWeb3Api.init();
-
-            expect(repuxWeb3Api._initialized).to.be.true;
-            expect(repuxWeb3Api._registry).to.be.ok;
-            expect(repuxWeb3Api._token).to.be.ok;
-        });
-    });
-
     describe('getVersion()', () => {
         it('should return actual version', () => {
             const version = RepuxWeb3Api.getVersion();
@@ -65,13 +55,11 @@ describe('RepuX Web3 API', () => {
 
     describe('getBalance()', () => {
         it('should return user balance', async () => {
-            await repuxWeb3Api.init();
             const balance = await repuxWeb3Api.getBalance();
             expect(balance.valueOf()).to.equal('100000000000000000000');
         });
 
         it('should return user balance by account', async () => {
-            await repuxWeb3Api.init();
             const balance = await repuxWeb3Api.getBalance(DEFAULT_ACCOUNT);
             expect(balance.valueOf(), '100000000000000000000');
         });

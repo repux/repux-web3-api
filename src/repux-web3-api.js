@@ -49,21 +49,9 @@ export default class RepuxWeb3Api {
 
         Registry.setProvider(this._provider);
         DemoToken.setProvider(this._provider);
-    }
 
-    /**
-     * Initializes RepuX API.
-     * Should be called once before any operation.
-     * @returns {Promise<void>}
-     */
-    async init() {
-        if (this._initialized) {
-            return;
-        }
-
-        this._initialized = true;
-        this._registry = await Registry.at(this._registryContractAddress);
-        this._token = await DemoToken.at(this._demoTokenContractAddress);
+        this._registry = Registry.at(this._registryContractAddress);
+        this._token = DemoToken.at(this._demoTokenContractAddress);
     }
 
     /**
@@ -87,10 +75,12 @@ export default class RepuxWeb3Api {
      * @param {string} [account=web3.eth.defaultAccount] - Account address
      * @returns {Promise<BigNumber>} Balance value
      */
-    getBalance(account) {
+    async getBalance(account) {
         if (!account) {
             account = this.getDefaultAccount();
         }
-        return this._token.balanceOf(account);
+
+        const contract = await this._token;
+        return contract.balanceOf(account);
     }
 }
