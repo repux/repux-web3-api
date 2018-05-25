@@ -5,6 +5,8 @@ import packageConfig from '../package';
 
 const Registry = contract(RegistryArtifacts);
 const DemoToken = contract(DemoTokenArtifacts);
+export const PRODUCT_CREATION_GAS_PRICE = 4000000;
+export const TOKEN_PRECISION = 18;
 
 // Workaround for a compatibility issue between web3@1.0.0-beta.29 and truffle-contract@3.0.3
 // https://github.com/trufflesuite/truffle-contract/issues/57#issuecomment-331300494
@@ -82,5 +84,27 @@ export default class RepuxWeb3Api {
 
         const contract = await this._token;
         return contract.balanceOf(account);
+    }
+
+    /**
+     * Creates product contract
+     * @param {string} metaFileHash - Hash of meta file containing all data required to product publication
+     * @param {BigNumber} price - Product price
+     * @param {string} [account=web3.eth.defaultAccount] - Account address
+     * @returns {Promise<*>}
+     */
+    createDataProduct(metaFileHash, price, account) {
+        if (!account) {
+            account = this.getDefaultAccount();
+        }
+
+        return this._registry.createDataProduct(
+            metaFileHash,
+            price.pow(10,TOKEN_PRECISION).toFixed(0),
+            {
+                from: account,
+                gas: PRODUCT_CREATION_GAS_PRICE
+            }
+        )
     }
 }

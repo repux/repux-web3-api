@@ -1,6 +1,7 @@
 /* eslint no-unused-expressions: 0 */
 import { expect } from 'chai';
 import RepuxWeb3Api from '../src/repux-web3-api';
+import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
 import config from './config';
 
@@ -62,6 +63,15 @@ describe('RepuX Web3 API', () => {
         it('should return user balance by account', async () => {
             const balance = await repuxWeb3Api.getBalance(DEFAULT_ACCOUNT);
             expect(balance.valueOf(), '100000000000000000000');
+        });
+    });
+
+    describe('createDataProduct()', () => {
+        it('should call createDataProduct() method on _registry object', async () => {
+            const metaFileHash = 'SOME_HASH';
+            const price = new BigNumber(1.1);
+            const result = await repuxWeb3Api.createDataProduct(metaFileHash, price, DEFAULT_ACCOUNT);
+            expect(result.receipt.status).to.equal('0x01');
         });
     });
 });

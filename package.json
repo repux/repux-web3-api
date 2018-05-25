@@ -52,6 +52,7 @@
     "@semantic-release/git": "^5.0.0"
   },
   "dependencies": {
+    "bignumber.js": "^7.2.0",
     "truffle-contract": "^3.0.5"
   }
 }
