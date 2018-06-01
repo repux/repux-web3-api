@@ -4,22 +4,17 @@
 Execute `yarn` from project root.
 
 ## Development
-1. Create symbolic link:
-```
-ln -s /path/to/compiled/contracts ./contracts 
-```
+1. Run ethereum node, compile and migrate contracts from [repux/repux-smart-contracts](https://github.com/repux/repux-smart-contracts) repository.
 
-2. Run ethereum node, compile and migrate contracts.
-
-3. Run following commands:
+2. Run following commands:
 ```bash
-npm install -g http-server
-npm install
+yarn global add http-server
+yarn
 ```
 
-4. And to build library run:
+3. And to build library run:
 ```bash
-npx webpack
+yarn build
 ```
 
 ## Tests
