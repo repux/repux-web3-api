@@ -27,7 +27,7 @@
     "release": "semantic-release"
   },
   "devDependencies": {
-    "@repux/repux-smart-contracts": "git+ssh://git@github.com:repux/repux-smart-contracts#v1.1.1",
+    "@repux/repux-smart-contracts": "git+ssh://git@github.com:repux/repux-smart-contracts#358ee205c306327f4344444bab9f65f99cfcc9c4",
     "@semantic-release/git": "^5.0.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
