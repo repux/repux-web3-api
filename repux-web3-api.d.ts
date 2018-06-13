@@ -64,9 +64,9 @@ export default class RepuxWeb3Api {
 
     /**
      * Returns default account
-     * @returns {string} Default account
+     * @returns {Promise<string>} Default account
      */
-    getDefaultAccount(): string;
+    getDefaultAccount(): Promise<string>;
 
     /**
      * Return account balance value

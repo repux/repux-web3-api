@@ -55,8 +55,8 @@ describe('RepuX Web3 API', () => {
     });
 
     describe('getDefaultAccount()', () => {
-        it('should return default account', () => {
-            const defaultAccount = repuxWeb3Api.getDefaultAccount();
+        it('should return default account', async () => {
+            const defaultAccount = await repuxWeb3Api.getDefaultAccount();
             expect(defaultAccount).to.equal(DEFAULT_ACCOUNT);
         });
     });

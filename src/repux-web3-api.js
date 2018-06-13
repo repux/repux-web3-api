@@ -72,10 +72,14 @@ export default class RepuxWeb3Api {
 
     /**
      * Returns default account
-     * @returns {string} Default account
+     * @returns {Promise<string>} Default account
      */
     getDefaultAccount() {
-        return this._web3.eth.accounts[0];
+        return new Promise(resolve => {
+            this._web3.eth.getAccounts((error, accounts) => {
+                resolve(accounts[0]);
+            });
+        });
     }
 
     /**
@@ -85,7 +89,7 @@ export default class RepuxWeb3Api {
      */
     async getBalance(account) {
         if (!account) {
-            account = this.getDefaultAccount();
+            account = await this.getDefaultAccount();
         }
 
         const contract = await this._token;
@@ -102,7 +106,7 @@ export default class RepuxWeb3Api {
      */
     async createDataProduct(metaFileHash, price, account) {
         if (!account) {
-            account = this.getDefaultAccount();
+            account = await this.getDefaultAccount();
         }
 
         const registry = await this._registry;
@@ -192,7 +196,7 @@ export default class RepuxWeb3Api {
     async purchaseDataProduct(dataProductAddress, publicKey, account) {
         let result;
         if (!account) {
-            account = this.getDefaultAccount();
+            account = await this.getDefaultAccount();
         }
 
         const token = await this._token;
@@ -233,7 +237,7 @@ export default class RepuxWeb3Api {
      */
     async approveDataProductPurchase(dataProductAddress, buyerAddress, buyerMetaHash, account) {
         if (!account) {
-            account = this.getDefaultAccount();
+            account = await this.getDefaultAccount();
         }
 
         const product = await DataProduct.at(dataProductAddress);
@@ -257,7 +261,7 @@ export default class RepuxWeb3Api {
      */
     async getBoughtDataProducts(account) {
         if (!account) {
-            account = this.getDefaultAccount();
+            account = await this.getDefaultAccount();
         }
 
         const registry = await this._registry;
@@ -271,7 +275,7 @@ export default class RepuxWeb3Api {
      */
     async getBoughtAndApprovedDataProducts(account) {
         if (!account) {
-            account = this.getDefaultAccount();
+            account = await this.getDefaultAccount();
         }
 
         const registry = await this._registry;
@@ -285,7 +289,7 @@ export default class RepuxWeb3Api {
      */
     async getCreatedDataProducts(account) {
         if (!account) {
-            account = this.getDefaultAccount();
+            account = await this.getDefaultAccount();
         }
 
         const registry = await this._registry;
