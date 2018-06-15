@@ -73,6 +73,13 @@ describe('RepuX Web3 API', () => {
         });
     });
 
+    describe('getNetworkId()', () => {
+        it('should return network identifier', async () => {
+            const netId = await repuxWeb3Api.getNetworkId();
+            expect(netId).to.not.be.undefined;
+        });
+    });
+
     describe('createDataProduct()', () => {
         it('should call createDataProduct() method on _registry object', async () => {
             const metaFileHash = 'SOME_HASH';
