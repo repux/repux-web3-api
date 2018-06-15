@@ -131,10 +131,13 @@ export default class RepuxWeb3Api {
      * Watches for DataProductUpdate events on blockchain
      * @param config - watch config
      * @param callback - callback called when event is received
+     * @returns {Promise<*>}
      */
     async watchForDataProductUpdate(config, callback) {
         const registry = await this._registry;
-        registry.DataProductUpdate({}, config).watch(async (errors, result) => {
+        const event = registry.DataProductUpdate({}, config);
+
+        event.watch(async (errors, result) => {
             if (!result) {
                 return;
             }
@@ -146,6 +149,8 @@ export default class RepuxWeb3Api {
                 blockNumber: result.blockNumber
             });
         });
+
+        return event;
     }
 
     /**

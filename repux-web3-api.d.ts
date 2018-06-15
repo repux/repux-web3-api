@@ -42,6 +42,10 @@ export interface DataProduct {
     totalRating: BigNumber;
 }
 
+export interface ContractEvent {
+    stopWatching(): void;
+}
+
 export default class RepuxWeb3Api {
     private web3;
     private registryContractAddress;
@@ -88,7 +92,7 @@ export default class RepuxWeb3Api {
      * @param config
      * @param callback
      */
-    watchForDataProductUpdate(config: { fromBlock: number, toBlock: number | string }, callback: (DataProductEvent) => void);
+    watchForDataProductUpdate(config: { fromBlock: number, toBlock: number | string }, callback: (DataProductEvent) => void): Promise<ContractEvent>;
 
     /**
      * Returns DataProduct data
