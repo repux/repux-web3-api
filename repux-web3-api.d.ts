@@ -80,6 +80,12 @@ export default class RepuxWeb3Api {
     getBalance(account?: string): Promise<BigNumber>;
 
     /**
+     * Returns network Id
+     * @returns {Promise<number>}
+     */
+    getNetworkId(): Promise<number>;
+
+    /**
      * Creates product contract
      * @param metaFileHash
      * @param price

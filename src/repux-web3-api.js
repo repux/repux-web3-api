@@ -98,6 +98,16 @@ export default class RepuxWeb3Api {
     }
 
     /**
+     * Returns network Id
+     * @returns {Promise<number>}
+     */
+    getNetworkId() {
+        return new Promise(resolve => {
+            this._web3.version.getNetwork((err, netId) => resolve(+netId));
+        });
+    }
+
+    /**
      * Creates product contract
      * @param {string} metaFileHash - Hash of meta file containing all data required to product publication
      * @param {BigNumber} price - Product price
