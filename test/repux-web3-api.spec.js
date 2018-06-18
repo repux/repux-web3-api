@@ -55,8 +55,8 @@ describe('RepuX Web3 API', () => {
     });
 
     describe('getDefaultAccount()', () => {
-        it('should return default account', () => {
-            const defaultAccount = repuxWeb3Api.getDefaultAccount();
+        it('should return default account', async () => {
+            const defaultAccount = await repuxWeb3Api.getDefaultAccount();
             expect(defaultAccount).to.equal(DEFAULT_ACCOUNT);
         });
     });
@@ -73,6 +73,13 @@ describe('RepuX Web3 API', () => {
         });
     });
 
+    describe('getNetworkId()', () => {
+        it('should return network identifier', async () => {
+            const netId = await repuxWeb3Api.getNetworkId();
+            expect(netId).to.not.be.undefined;
+        });
+    });
+
     describe('createDataProduct()', () => {
         it('should call createDataProduct() method on _registry object', async () => {
             const metaFileHash = 'SOME_HASH';
@@ -85,8 +92,8 @@ describe('RepuX Web3 API', () => {
 
     describe('watchForDataProductUpdate()', () => {
         it('should listen for DataProductUpdate event', () => {
-            return new Promise(resolve => {
-                repuxWeb3Api.watchForDataProductUpdate({
+            return new Promise(async resolve => {
+                const event = await repuxWeb3Api.watchForDataProductUpdate({
                     fromBlock: createdProduct.blockNumber,
                     toBLock: 'latest'
                 }, ({ dataProductAddress, userAddress, action, blockNumber }) => {
@@ -94,6 +101,7 @@ describe('RepuX Web3 API', () => {
                     expect(userAddress).to.equal(DEFAULT_ACCOUNT);
                     expect(action).to.equal('0');
                     expect(blockNumber).to.be.greaterThan(0);
+                    event.stopWatching();
                     resolve();
                 });
             });

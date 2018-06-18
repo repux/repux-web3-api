@@ -42,6 +42,10 @@ export interface DataProduct {
     totalRating: BigNumber;
 }
 
+export interface ContractEvent {
+    stopWatching(): void;
+}
+
 export default class RepuxWeb3Api {
     private web3;
     private registryContractAddress;
@@ -64,9 +68,9 @@ export default class RepuxWeb3Api {
 
     /**
      * Returns default account
-     * @returns {string} Default account
+     * @returns {Promise<string>} Default account
      */
-    getDefaultAccount(): string;
+    getDefaultAccount(): Promise<string>;
 
     /**
      * Return account balance value
@@ -74,6 +78,12 @@ export default class RepuxWeb3Api {
      * @returns {Promise<BigNumber>} Balance value
      */
     getBalance(account?: string): Promise<BigNumber>;
+
+    /**
+     * Returns network Id
+     * @returns {Promise<number>}
+     */
+    getNetworkId(): Promise<number>;
 
     /**
      * Creates product contract
@@ -88,7 +98,7 @@ export default class RepuxWeb3Api {
      * @param config
      * @param callback
      */
-    watchForDataProductUpdate(config: { fromBlock: number, toBlock: number | string }, callback: (DataProductEvent) => void);
+    watchForDataProductUpdate(config: { fromBlock: number, toBlock: number | string }, callback: (DataProductEvent) => void): Promise<ContractEvent>;
 
     /**
      * Returns DataProduct data
