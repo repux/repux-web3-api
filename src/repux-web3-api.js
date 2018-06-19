@@ -10,8 +10,11 @@ const Registry = contract(RegistryArtifacts);
 const DemoToken = contract(DemoTokenArtifacts);
 const DataProduct = contract(DataProductArtifacts);
 export const PRODUCT_CREATION_GAS_LIMIT = 4000000;
+export const PRODUCT_DELETION_GAS_LIMIT = 4000000;
 export const PRODUCT_PURCHASE_GAS_LIMIT = 4000000;
 export const PRODUCT_PURCHASE_APPROVE_GAS_LIMIT = 4000000;
+export const PRODUCT_PURCHASE_CANCEL_GAS_LIMIT = 4000000;
+export const PRODUCT_WITHDRAW_GAS_LIMIT = 4000000;
 
 // Workaround for a compatibility issue between web3@1.0.0-beta.29 and truffle-contract@3.0.3
 // https://github.com/trufflesuite/truffle-contract/issues/57#issuecomment-331300494
@@ -94,7 +97,7 @@ export default class RepuxWeb3Api {
 
         const contract = await this._token;
         const result = await contract.balanceOf.call(account);
-        return new BigNumber(result);
+        return new BigNumber(this._web3.fromWei(result));
     }
 
     /**
@@ -111,10 +114,11 @@ export default class RepuxWeb3Api {
      * Creates product contract
      * @param {string} metaFileHash - Hash of meta file containing all data required to product publication
      * @param {BigNumber} price - Product price
+     * @param {number} daysForDeliver - Days for deliver
      * @param {string} [account=web3.eth.defaultAccount] - Account address
-     * @returns {Promise<string>}
+     * @returns {Promise<*>}
      */
-    async createDataProduct(metaFileHash, price, account) {
+    async createDataProduct(metaFileHash, price, daysForDeliver, account) {
         if (!account) {
             account = await this.getDefaultAccount();
         }
@@ -123,18 +127,14 @@ export default class RepuxWeb3Api {
         const result = await registry.createDataProduct(
             metaFileHash,
             this._web3.toWei(price.toString()),
+            daysForDeliver,
             {
                 from: account,
                 gas: PRODUCT_CREATION_GAS_LIMIT
             }
         );
 
-        return {
-            address: result.logs[0].args.dataProduct,
-            blockNumber: result.logs[0].blockNumber,
-            blockHash: result.logs[0].blockHash,
-            status: result.receipt.status
-        };
+        return this._getTransactionResult(result.logs[0].args.dataProduct, result);
     }
 
     /**
@@ -166,7 +166,8 @@ export default class RepuxWeb3Api {
     /**
      * Returns DataProduct data
      * @param {string} dataProductAddress
-     * @returns {Promise<{address: string, owner: string, price: BigNumber, sellerMetaHash: string, totalRating: BigNumber}>}
+     * @returns {Promise<{address: string, owner: string, price: BigNumber, sellerMetaHash: string, totalRating: BigNumber,
+     * buyersDeposit: BigNumber, fundsAccumulated: BigNumber}, disabled: boolean>}
      */
     async getDataProduct(dataProductAddress) {
         const product = await DataProduct.at(dataProductAddress);
@@ -176,7 +177,10 @@ export default class RepuxWeb3Api {
             owner: await product.owner.call(),
             price: this._web3.fromWei(await product.price.call()),
             sellerMetaHash: await product.sellerMetaHash.call(),
-            totalRating: await product.getTotalRating.call()
+            totalRating: await product.getTotalRating.call(),
+            buyersDeposit: await product.buyersDeposit.call(),
+            fundsAccumulated: this.getBalance(dataProductAddress),
+            disabled: await product.disabled.call()
         };
     }
 
@@ -193,11 +197,13 @@ export default class RepuxWeb3Api {
         return {
             publicKey: transaction[0],
             buyerMetaHash: transaction[1],
-            price: this._web3.fromWei(transaction[2]),
-            purchased: transaction[3],
-            approved: transaction[4],
-            rated: transaction[5],
-            rating: transaction[6]
+            deliveryDeadline: transaction[2],
+            price: this._web3.fromWei(transaction[3]),
+            fee: this._web3.fromWei(transaction[4]),
+            purchased: transaction[5],
+            finalised: transaction[6],
+            rated: transaction[7],
+            rating: transaction[8]
         };
     }
 
@@ -206,7 +212,7 @@ export default class RepuxWeb3Api {
      * @param {string} dataProductAddress
      * @param {string} publicKey
      * @param {string} account
-     * @returns {Promise<void>}
+     * @returns {Promise<*>}
      */
     async purchaseDataProduct(dataProductAddress, publicKey, account) {
         let result;
@@ -235,38 +241,33 @@ export default class RepuxWeb3Api {
             throw error;
         }
 
-        return {
-            address: dataProductAddress,
-            blockNumber: result.receipt.blockNumber,
-            blockHash: result.receipt.blockHash,
-            status: result.receipt.status
-        };
+        return this._getTransactionResult(dataProductAddress, result);
+    }
+
+    /** @deprecated use finaliseDataProductPurchase() */
+    approveDataProductPurchase(dataProductAddress, buyerAddress, buyerMetaHash, account) {
+        return this.finaliseDataProductPurchase(dataProductAddress, buyerAddress, buyerMetaHash, account);
     }
 
     /**
-     * Approves data product purchase
+     * Finalises data product purchase
      * @param dataProductAddress
      * @param buyerAddress
      * @param buyerMetaHash
      * @param account
      */
-    async approveDataProductPurchase(dataProductAddress, buyerAddress, buyerMetaHash, account) {
+    async finaliseDataProductPurchase(dataProductAddress, buyerAddress, buyerMetaHash, account) {
         if (!account) {
             account = await this.getDefaultAccount();
         }
 
         const product = await DataProduct.at(dataProductAddress);
-        const result = await product.approve(buyerAddress, buyerMetaHash, {
+        const result = await product.finalise(buyerAddress, buyerMetaHash, {
             from: account,
             gas: PRODUCT_PURCHASE_APPROVE_GAS_LIMIT
         });
 
-        return {
-            address: dataProductAddress,
-            blockNumber: result.receipt.blockNumber,
-            blockHash: result.receipt.blockHash,
-            status: result.receipt.status
-        };
+        return this._getTransactionResult(dataProductAddress, result);
     }
 
     /**
@@ -283,18 +284,23 @@ export default class RepuxWeb3Api {
         return registry.getDataPurchasedFor.call(account);
     }
 
+    /** @deprecated use getBoughtAndFinalisedDataProducts() */
+    getBoughtAndFinalisedDataProducts(account) {
+        return this.getBoughtAndFinalisedDataProducts(account);
+    }
+
     /**
      * Returns products bought by provided account and approved
      * @param {string} account
      * @returns {Promise<*>}
      */
-    async getBoughtAndApprovedDataProducts(account) {
+    async getBoughtAndFinalisedDataProducts(account) {
         if (!account) {
             account = await this.getDefaultAccount();
         }
 
         const registry = await this._registry;
-        return registry.getDataApprovedFor.call(account);
+        return registry.getDataFinalisedFor.call(account);
     }
 
     /**
@@ -309,6 +315,75 @@ export default class RepuxWeb3Api {
 
         const registry = await this._registry;
         return registry.getDataCreatedFor.call(account);
+    }
+
+    /**
+     * Withdraws funds from data product to owner account
+     * @param {string} dataProductAddress
+     * @param {string} account
+     * @returns {Promise<*>}
+     */
+    async withdrawFundsFromDataProduct(dataProductAddress, account) {
+        if (!account) {
+            account = await this.getDefaultAccount();
+        }
+
+        const product = await DataProduct.at(dataProductAddress);
+        const result = await product.withdraw({
+            from: account,
+            gas: PRODUCT_WITHDRAW_GAS_LIMIT
+        });
+
+        return this._getTransactionResult(dataProductAddress, result);
+    }
+
+    /**
+     * Disables Data Product
+     * @param dataProductAddress
+     * @param account
+     * @returns {Promise<*>}
+     */
+    async disableDataProduct(dataProductAddress, account) {
+        if (!account) {
+            account = await this.getDefaultAccount();
+        }
+
+        const product = await DataProduct.at(dataProductAddress);
+        const result = await product.disable({
+            from: account,
+            gas: PRODUCT_DELETION_GAS_LIMIT
+        });
+
+        return this._getTransactionResult(dataProductAddress, result);
+    }
+
+    /**
+     * Cancels Data Product purchase (works only after deliveryDeadline)
+     * @param dataProductAddress
+     * @param account
+     * @returns {Promise<*>}
+     */
+    async cancelDataProductPurchase(dataProductAddress, account) {
+        if (!account) {
+            account = await this.getDefaultAccount();
+        }
+
+        const product = await DataProduct.at(dataProductAddress);
+        const result = await product.cancelPurchase({
+            from: account,
+            gas: PRODUCT_PURCHASE_CANCEL_GAS_LIMIT
+        });
+
+        return this._getTransactionResult(dataProductAddress, result);
+    }
+
+    _getTransactionResult(address, result) {
+        return {
+            address,
+            blockNumber: result.receipt.blockNumber,
+            blockHash: result.receipt.blockHash,
+            status: result.receipt.status
+        };
     }
 }
 
