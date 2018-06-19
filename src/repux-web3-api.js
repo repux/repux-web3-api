@@ -72,10 +72,14 @@ export default class RepuxWeb3Api {
 
     /**
      * Returns default account
-     * @returns {string} Default account
+     * @returns {Promise<string>} Default account
      */
     getDefaultAccount() {
-        return this._web3.eth.accounts[0];
+        return new Promise(resolve => {
+            this._web3.eth.getAccounts((error, accounts) => {
+                resolve(accounts[0]);
+            });
+        });
     }
 
     /**
@@ -85,12 +89,22 @@ export default class RepuxWeb3Api {
      */
     async getBalance(account) {
         if (!account) {
-            account = this.getDefaultAccount();
+            account = await this.getDefaultAccount();
         }
 
         const contract = await this._token;
         const result = await contract.balanceOf.call(account);
         return new BigNumber(result);
+    }
+
+    /**
+     * Returns network Id
+     * @returns {Promise<number>}
+     */
+    getNetworkId() {
+        return new Promise(resolve => {
+            this._web3.version.getNetwork((err, netId) => resolve(+netId));
+        });
     }
 
     /**
@@ -102,7 +116,7 @@ export default class RepuxWeb3Api {
      */
     async createDataProduct(metaFileHash, price, account) {
         if (!account) {
-            account = this.getDefaultAccount();
+            account = await this.getDefaultAccount();
         }
 
         const registry = await this._registry;
@@ -127,10 +141,13 @@ export default class RepuxWeb3Api {
      * Watches for DataProductUpdate events on blockchain
      * @param config - watch config
      * @param callback - callback called when event is received
+     * @returns {Promise<*>}
      */
     async watchForDataProductUpdate(config, callback) {
         const registry = await this._registry;
-        registry.DataProductUpdate({}, config).watch(async (errors, result) => {
+        const event = registry.DataProductUpdate({}, config);
+
+        event.watch(async (errors, result) => {
             if (!result) {
                 return;
             }
@@ -142,6 +159,8 @@ export default class RepuxWeb3Api {
                 blockNumber: result.blockNumber
             });
         });
+
+        return event;
     }
 
     /**
@@ -192,7 +211,7 @@ export default class RepuxWeb3Api {
     async purchaseDataProduct(dataProductAddress, publicKey, account) {
         let result;
         if (!account) {
-            account = this.getDefaultAccount();
+            account = await this.getDefaultAccount();
         }
 
         const token = await this._token;
@@ -233,7 +252,7 @@ export default class RepuxWeb3Api {
      */
     async approveDataProductPurchase(dataProductAddress, buyerAddress, buyerMetaHash, account) {
         if (!account) {
-            account = this.getDefaultAccount();
+            account = await this.getDefaultAccount();
         }
 
         const product = await DataProduct.at(dataProductAddress);
@@ -257,7 +276,7 @@ export default class RepuxWeb3Api {
      */
     async getBoughtDataProducts(account) {
         if (!account) {
-            account = this.getDefaultAccount();
+            account = await this.getDefaultAccount();
         }
 
         const registry = await this._registry;
@@ -271,7 +290,7 @@ export default class RepuxWeb3Api {
      */
     async getBoughtAndApprovedDataProducts(account) {
         if (!account) {
-            account = this.getDefaultAccount();
+            account = await this.getDefaultAccount();
         }
 
         const registry = await this._registry;
@@ -285,7 +304,7 @@ export default class RepuxWeb3Api {
      */
     async getCreatedDataProducts(account) {
         if (!account) {
-            account = this.getDefaultAccount();
+            account = await this.getDefaultAccount();
         }
 
         const registry = await this._registry;
