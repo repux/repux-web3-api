@@ -12,6 +12,10 @@ let web3,
     createdProduct;
 
 describe('RepuX Web3 API', () => {
+    const metaFileHash = 'SOME_HASH';
+    const daysForDeliver = 0;
+    const price = new BigNumber(1.1);
+
     before(async () => {
         web3 = new Web3(new Web3.providers.HttpProvider(config.ETH_NODE_URL));
         repuxWeb3Api = new RepuxWeb3Api(web3, {
@@ -82,9 +86,7 @@ describe('RepuX Web3 API', () => {
 
     describe('createDataProduct()', () => {
         it('should call createDataProduct() method on _registry object', async () => {
-            const metaFileHash = 'SOME_HASH';
-            const price = new BigNumber(1.1);
-            const result = await repuxWeb3Api.createDataProduct(metaFileHash, price, DEFAULT_ACCOUNT);
+            const result = await repuxWeb3Api.createDataProduct(metaFileHash, price, daysForDeliver, DEFAULT_ACCOUNT);
             expect(result.status).to.equal('0x01');
             createdProduct = result;
         });
@@ -116,6 +118,7 @@ describe('RepuX Web3 API', () => {
             expect(result.sellerMetaHash).to.equal('SOME_HASH');
             expect(result.totalRating.toString()).to.equal(DataProductUpdateAction.CREATE);
             expect(result.price.toString()).to.equal('1.1');
+            expect(result.disabled).to.be.false;
         });
     });
 
@@ -139,7 +142,7 @@ describe('RepuX Web3 API', () => {
             expect(result.buyerMetaHash).to.equal('');
             expect(result.price.toString()).to.equal('1.1');
             expect(result.purchased).to.be.true;
-            expect(result.approved).to.be.false;
+            expect(result.finalised).to.be.false;
             expect(result.rated).to.be.false;
             expect(result.rating.toString()).to.equal('0');
         });
@@ -171,10 +174,10 @@ describe('RepuX Web3 API', () => {
         });
     });
 
-    describe('approveDataProductPurchase()', () => {
+    describe('finaliseDataProductPurchase()', () => {
         it('shouldn\'t throw any errors', async () => {
             try {
-                const result = await repuxWeb3Api.approveDataProductPurchase(createdProduct.address, SECONDARY_ACCOUNT, 'SOME_HASH');
+                const result = await repuxWeb3Api.finaliseDataProductPurchase(createdProduct.address, SECONDARY_ACCOUNT, 'SOME_HASH');
                 expect(result.status).to.equal('0x01');
                 expect(result.address).to.equal(createdProduct.address);
                 expect(true).to.be.true;
@@ -185,16 +188,63 @@ describe('RepuX Web3 API', () => {
         });
     });
 
-    describe('getBoughtAndApprovedDataProducts()', () => {
+    describe('getBoughtAndFinalisedDataProducts()', () => {
         it('should return list containing addresses of products bought by account owner', async () => {
-            const result = await repuxWeb3Api.getBoughtAndApprovedDataProducts(SECONDARY_ACCOUNT);
+            const result = await repuxWeb3Api.getBoughtAndFinalisedDataProducts(SECONDARY_ACCOUNT);
             expect(result.length > 0);
             expect(result.includes(createdProduct.address));
         });
 
         it('should\'t return address of product created by account owner', async () => {
-            const result = await repuxWeb3Api.getBoughtAndApprovedDataProducts(DEFAULT_ACCOUNT);
+            const result = await repuxWeb3Api.getBoughtAndFinalisedDataProducts(DEFAULT_ACCOUNT);
             expect(!result.includes(createdProduct.address));
+        });
+    });
+
+    describe('withdrawFundsFromDataProduct()', () => {
+        it('should withdraw funds from data product contract', async () => {
+            try {
+                const balanceBefore = await repuxWeb3Api.getBalance(createdProduct.address);
+                expect(balanceBefore.toString()).to.equal(price.toString());
+                const result = await repuxWeb3Api.withdrawFundsFromDataProduct(createdProduct.address);
+                expect(result.status).to.equal('0x01');
+                const balanceAfter = await repuxWeb3Api.getBalance(createdProduct.address);
+                expect(balanceAfter.toString()).to.equal('0');
+                expect(true).to.be.true;
+            } catch (error) {
+                console.log(error);
+                expect(false).to.be.true;
+            }
+        });
+    });
+
+    describe('disableDataProduct()', () => {
+        it('shouldn\'t throw any errors', async () => {
+            try {
+                const result = await repuxWeb3Api.disableDataProduct(createdProduct.address);
+                expect(result.status).to.equal('0x01');
+                expect(true).to.be.true;
+                const product = await repuxWeb3Api.getDataProduct(createdProduct.address);
+                expect(product.disabled).to.be.true;
+            } catch (error) {
+                console.log(error);
+                expect(false).to.be.true;
+            }
+        });
+    });
+
+    describe('cancelPurchase()', () => {
+        it('shouldn\'t throw any errors', async () => {
+            try {
+                const product = await repuxWeb3Api.createDataProduct(metaFileHash, price, daysForDeliver, DEFAULT_ACCOUNT);
+                await repuxWeb3Api.purchaseDataProduct(product.address, 'SOME_PUBLIC_KEY', SECONDARY_ACCOUNT);
+                const result = await repuxWeb3Api.cancelDataProductPurchase(product.address, SECONDARY_ACCOUNT);
+                expect(result.status).to.equal('0x01');
+                expect(true).to.be.true;
+            } catch (error) {
+                console.log(error);
+                expect(false).to.be.true;
+            }
         });
     });
 });

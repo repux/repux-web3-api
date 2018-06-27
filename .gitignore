@@ -3,3 +3,5 @@ node_modules/
 contracts
 build/tests/
 docs/coverage
+
+yarn-error.log
