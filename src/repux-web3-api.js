@@ -18,6 +18,8 @@ export const PRODUCT_WITHDRAW_GAS_LIMIT = 4000000;
 export const INIT_STATUS_INITIALIZED = 0;
 export const INIT_STATUS_ALREADY_INITIALIZED = 1;
 
+const ERR_INIT = 'Please initialize library first using `init()` method';
+
 let Registry;
 let DemoToken;
 let DataProduct;
@@ -107,6 +109,30 @@ export default class RepuxWeb3Api {
     }
 
     /**
+     * Returns DemoToken contract instance
+     * @returns {T | *}
+     */
+    getDemoTokenContract() {
+        if (!this.initialized) {
+            throw new Error(ERR_INIT);
+        }
+
+        return this._token;
+    }
+
+    /**
+     * Returns Registry contract instance
+     * @returns {T | *}
+     */
+    getRegistryContract() {
+        if (!this.initialized) {
+            throw new Error(ERR_INIT);
+        }
+
+        return this._registry;
+    }
+
+    /**
      * Returns default account
      * @returns {Promise<string>} Default account
      */
@@ -128,7 +154,7 @@ export default class RepuxWeb3Api {
             account = await this.getDefaultAccount();
         }
 
-        const result = await this._token.balanceOf.call(account);
+        const result = await this.getDemoTokenContract().balanceOf.call(account);
         return new BigNumber(this._web3.fromWei(result));
     }
 
@@ -155,7 +181,7 @@ export default class RepuxWeb3Api {
             account = await this.getDefaultAccount();
         }
 
-        const result = await this._registry.createDataProduct(
+        const result = await this.getRegistryContract().createDataProduct(
             metaFileHash,
             this._web3.toWei(price.toString()),
             daysForDeliver,
@@ -175,7 +201,7 @@ export default class RepuxWeb3Api {
      * @returns {Promise<*>}
      */
     async watchForDataProductUpdate(config, callback) {
-        const event = this._registry.DataProductUpdate({}, config);
+        const event = this.getRegistryContract().DataProductUpdate({}, config);
 
         event.watch(async (errors, result) => {
             if (!result) {
@@ -254,7 +280,7 @@ export default class RepuxWeb3Api {
         const price = await product.price.call();
 
         try {
-            await this._token.approve(dataProductAddress, price, {
+            await this.getDemoTokenContract().approve(dataProductAddress, price, {
                 from: account
             });
 
@@ -263,7 +289,7 @@ export default class RepuxWeb3Api {
                 gas: PRODUCT_PURCHASE_GAS_LIMIT
             });
         } catch (error) {
-            await this._token.approve(dataProductAddress, 0, {
+            await this.getDemoTokenContract().approve(dataProductAddress, 0, {
                 from: account
             });
 
@@ -309,7 +335,7 @@ export default class RepuxWeb3Api {
             account = await this.getDefaultAccount();
         }
 
-        return this._registry.getDataPurchasedFor.call(account);
+        return this.getRegistryContract().getDataPurchasedFor.call(account);
     }
 
     /** @deprecated use getBoughtAndFinalisedDataProducts() */
@@ -327,7 +353,7 @@ export default class RepuxWeb3Api {
             account = await this.getDefaultAccount();
         }
 
-        return this._registry.getDataFinalisedFor.call(account);
+        return this.getRegistryContract().getDataFinalisedFor.call(account);
     }
 
     /**
@@ -341,7 +367,7 @@ export default class RepuxWeb3Api {
         }
 
 
-        return this._registry.getDataCreatedFor.call(account);
+        return this.getRegistryContract().getDataCreatedFor.call(account);
     }
 
     /**

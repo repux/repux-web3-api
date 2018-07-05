@@ -75,7 +75,7 @@ export default class RepuxWeb3Api {
    * @returns {Promise<any>}
    */
   init(): Promise<any>;
-
+  
   /**
    * Returns default account
    * @returns {Promise<string>} Default account
