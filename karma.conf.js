@@ -9,7 +9,7 @@ module.exports = function (config) {
         files: [
             'test/*.spec.js'
         ],
-        reporters: ['mocha', 'coverage'],
+        reporters: ['mocha'],
         port: 9877,
         colors: true,
         logLevel: config.LOG_INFO,
@@ -19,7 +19,7 @@ module.exports = function (config) {
         concurrency: Infinity,
 
         preprocessors: {
-            'src/!(*.spec)+(*.js)': ['eslint', 'coverage'],
+            'src/!(*.spec)+(*.js)': ['eslint'],
             'test/*.spec.js': ['eslint', 'webpack']
         },
 
@@ -38,15 +38,6 @@ module.exports = function (config) {
 
         mochaReporter: {
             showDiff: true
-        },
-
-        coverageReporter: {
-            type: 'html',
-            dir: './docs/coverage',
-            instrumenterOptions: {
-                istanbul: { noCompact: true }
-            },
-            includeAllSources: true
         }
     });
 };
