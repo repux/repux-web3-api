@@ -6,15 +6,23 @@ import packageConfig from '../package';
 import BigNumber from 'bignumber.js';
 import { DataProductUpdateAction } from './data-product-update-action';
 
-const Registry = contract(RegistryArtifacts);
-const DemoToken = contract(DemoTokenArtifacts);
-const DataProduct = contract(DataProductArtifacts);
+export { DataProductUpdateAction };
+
 export const PRODUCT_CREATION_GAS_LIMIT = 4000000;
 export const PRODUCT_DELETION_GAS_LIMIT = 4000000;
 export const PRODUCT_PURCHASE_GAS_LIMIT = 4000000;
 export const PRODUCT_PURCHASE_APPROVE_GAS_LIMIT = 4000000;
 export const PRODUCT_PURCHASE_CANCEL_GAS_LIMIT = 4000000;
 export const PRODUCT_WITHDRAW_GAS_LIMIT = 4000000;
+
+export const INIT_STATUS_INITIALIZED = 0;
+export const INIT_STATUS_ALREADY_INITIALIZED = 1;
+
+const ERR_INIT = 'Please initialize library first using `init()` method';
+
+let Registry;
+let DemoToken;
+let DataProduct;
 
 // Workaround for a compatibility issue between web3@1.0.0-beta.29 and truffle-contract@3.0.3
 // https://github.com/trufflesuite/truffle-contract/issues/57#issuecomment-331300494
@@ -56,13 +64,6 @@ export default class RepuxWeb3Api {
 
         this._web3 = fixTruffleContractCompatibilityIssue(web3);
         this._provider = this._web3.currentProvider;
-
-        Registry.setProvider(this._provider);
-        DemoToken.setProvider(this._provider);
-        DataProduct.setProvider(this._provider);
-
-        this._registry = Registry.at(this._registryContractAddress);
-        this._token = DemoToken.at(this._demoTokenContractAddress);
     }
 
     /**
@@ -71,6 +72,64 @@ export default class RepuxWeb3Api {
      */
     static getVersion() {
         return packageConfig.version;
+    }
+
+    /**
+     * Sets up contracts
+     * @returns {Promise<any>}
+     */
+    init() {
+        return new Promise((resolve, reject) => {
+            if (this.initialized) {
+                resolve(INIT_STATUS_ALREADY_INITIALIZED);
+            }
+
+            Registry = contract(RegistryArtifacts);
+            DemoToken = contract(DemoTokenArtifacts);
+            DataProduct = contract(DataProductArtifacts);
+
+            Registry.setProvider(this._provider);
+            DemoToken.setProvider(this._provider);
+            DataProduct.setProvider(this._provider);
+
+            Registry.at(this._registryContractAddress)
+                .then(registry => {
+                    this._registry = registry;
+                    return DemoToken.at(this._demoTokenContractAddress);
+                })
+                .then(token => {
+                    this._token = token;
+                    this.initialized = true;
+                    resolve(INIT_STATUS_INITIALIZED);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
+    }
+
+    /**
+     * Returns DemoToken contract instance
+     * @returns {T | *}
+     */
+    getDemoTokenContract() {
+        if (!this.initialized) {
+            throw new Error(ERR_INIT);
+        }
+
+        return this._token;
+    }
+
+    /**
+     * Returns Registry contract instance
+     * @returns {T | *}
+     */
+    getRegistryContract() {
+        if (!this.initialized) {
+            throw new Error(ERR_INIT);
+        }
+
+        return this._registry;
     }
 
     /**
@@ -95,8 +154,7 @@ export default class RepuxWeb3Api {
             account = await this.getDefaultAccount();
         }
 
-        const contract = await this._token;
-        const result = await contract.balanceOf.call(account);
+        const result = await this.getDemoTokenContract().balanceOf.call(account);
         return new BigNumber(this._web3.fromWei(result));
     }
 
@@ -123,8 +181,7 @@ export default class RepuxWeb3Api {
             account = await this.getDefaultAccount();
         }
 
-        const registry = await this._registry;
-        const result = await registry.createDataProduct(
+        const result = await this.getRegistryContract().createDataProduct(
             metaFileHash,
             this._web3.toWei(price.toString()),
             daysForDeliver,
@@ -144,8 +201,7 @@ export default class RepuxWeb3Api {
      * @returns {Promise<*>}
      */
     async watchForDataProductUpdate(config, callback) {
-        const registry = await this._registry;
-        const event = registry.DataProductUpdate({}, config);
+        const event = this.getRegistryContract().DataProductUpdate({}, config);
 
         event.watch(async (errors, result) => {
             if (!result) {
@@ -220,12 +276,11 @@ export default class RepuxWeb3Api {
             account = await this.getDefaultAccount();
         }
 
-        const token = await this._token;
         const product = await DataProduct.at(dataProductAddress);
         const price = await product.price.call();
 
         try {
-            await token.approve(dataProductAddress, price, {
+            await this.getDemoTokenContract().approve(dataProductAddress, price, {
                 from: account
             });
 
@@ -234,7 +289,7 @@ export default class RepuxWeb3Api {
                 gas: PRODUCT_PURCHASE_GAS_LIMIT
             });
         } catch (error) {
-            await token.approve(dataProductAddress, 0, {
+            await this.getDemoTokenContract().approve(dataProductAddress, 0, {
                 from: account
             });
 
@@ -280,8 +335,7 @@ export default class RepuxWeb3Api {
             account = await this.getDefaultAccount();
         }
 
-        const registry = await this._registry;
-        return registry.getDataPurchasedFor.call(account);
+        return this.getRegistryContract().getDataPurchasedFor.call(account);
     }
 
     /** @deprecated use getBoughtAndFinalisedDataProducts() */
@@ -299,8 +353,7 @@ export default class RepuxWeb3Api {
             account = await this.getDefaultAccount();
         }
 
-        const registry = await this._registry;
-        return registry.getDataFinalisedFor.call(account);
+        return this.getRegistryContract().getDataFinalisedFor.call(account);
     }
 
     /**
@@ -313,8 +366,8 @@ export default class RepuxWeb3Api {
             account = await this.getDefaultAccount();
         }
 
-        const registry = await this._registry;
-        return registry.getDataCreatedFor.call(account);
+
+        return this.getRegistryContract().getDataCreatedFor.call(account);
     }
 
     /**
@@ -385,8 +438,4 @@ export default class RepuxWeb3Api {
             status: result.receipt.status
         };
     }
-}
-
-export {
-    DataProductUpdateAction
 }
