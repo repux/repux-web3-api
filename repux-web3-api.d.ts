@@ -71,6 +71,12 @@ export default class RepuxWeb3Api {
   getVersion(): string;
 
   /**
+   * Sets up contracts
+   * @returns {Promise<any>}
+   */
+  init(): Promise<any>;
+  
+  /**
    * Returns default account
    * @returns {Promise<string>} Default account
    */

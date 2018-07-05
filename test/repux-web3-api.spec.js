@@ -1,6 +1,10 @@
 /* eslint no-unused-expressions: 0 */
 import { expect } from 'chai';
-import RepuxWeb3Api, { DataProductUpdateAction } from '../src/repux-web3-api';
+import RepuxWeb3Api, {
+    DataProductUpdateAction,
+    INIT_STATUS_INITIALIZED,
+    INIT_STATUS_ALREADY_INITIALIZED
+} from '../src/repux-web3-api';
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
 import config from './config';
@@ -23,12 +27,10 @@ describe('RepuX Web3 API', () => {
             DEMOTOKEN_CONTRACT_ADDRESS: config.DEMOTOKEN_CONTRACT_ADDRESS
         });
 
+        await repuxWeb3Api.init();
+
         DEFAULT_ACCOUNT = web3.eth.accounts[0];
         SECONDARY_ACCOUNT = web3.eth.accounts[1];
-
-        const amountToIssue = web3.toWei(new BigNumber('100').toString());
-        await repuxWeb3Api._token.issue(DEFAULT_ACCOUNT, amountToIssue, { from: DEFAULT_ACCOUNT });
-        await repuxWeb3Api._token.issue(SECONDARY_ACCOUNT, amountToIssue, { from: DEFAULT_ACCOUNT });
     });
 
     describe('constructor()', () => {
@@ -48,6 +50,42 @@ describe('RepuX Web3 API', () => {
             expect(() => new RepuxWeb3Api(web3, {
                 REGISTRY_CONTRACT_ADDRESS: config.REGISTRY_CONTRACT_ADDRESS
             })).to.throw('Repux DemoToken contract address should be set!');
+        });
+    });
+
+    describe('init()', () => {
+        it('should set contract instances', async () => {
+            await repuxWeb3Api.init();
+            expect(repuxWeb3Api._registry).to.not.be.undefined;
+            expect(repuxWeb3Api._token).to.not.be.undefined;
+        });
+
+        it('should throw an error when wrong contract address provided', async () => {
+            const api = new RepuxWeb3Api(web3, {
+                REGISTRY_CONTRACT_ADDRESS: '0xc2d327375dd73b132d1171aadf7a205d3a9b7d8g',
+                DEMOTOKEN_CONTRACT_ADDRESS: config.DEMOTOKEN_CONTRACT_ADDRESS
+            });
+
+            let errorThrown = false;
+            try {
+                await api.init();
+            } catch (err) {
+                errorThrown = true;
+            }
+
+            expect(errorThrown).to.be.true;
+        }).timeout(5000);
+
+        it('should setup contracts only once', async () => {
+            const api = new RepuxWeb3Api(web3, {
+                REGISTRY_CONTRACT_ADDRESS: config.REGISTRY_CONTRACT_ADDRESS,
+                DEMOTOKEN_CONTRACT_ADDRESS: config.DEMOTOKEN_CONTRACT_ADDRESS
+            });
+            let status = await api.init();
+            expect(status).to.equal(INIT_STATUS_INITIALIZED);
+
+            status = await api.init();
+            expect(status).to.equal(INIT_STATUS_ALREADY_INITIALIZED);
         });
     });
 
