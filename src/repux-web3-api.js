@@ -234,8 +234,8 @@ export default class RepuxWeb3Api {
             price: this._web3.fromWei(await product.price.call()),
             sellerMetaHash: await product.sellerMetaHash.call(),
             totalRating: await product.getTotalRating.call(),
-            buyersDeposit: await product.buyersDeposit.call(),
-            fundsAccumulated: this.getBalance(dataProductAddress),
+            buyersDeposit: this._web3.fromWei(await product.buyersDeposit.call()),
+            fundsAccumulated: await this.getBalance(dataProductAddress),
             disabled: await product.disabled.call()
         };
     }
@@ -253,13 +253,13 @@ export default class RepuxWeb3Api {
         return {
             publicKey: transaction[0],
             buyerMetaHash: transaction[1],
-            deliveryDeadline: transaction[2],
-            price: this._web3.fromWei(transaction[3]),
-            fee: this._web3.fromWei(transaction[4]),
+            deliveryDeadline: new Date(transaction[2].toNumber() * 1000),
+            price: new BigNumber(this._web3.fromWei(transaction[3])),
+            fee: new BigNumber(this._web3.fromWei(transaction[4])),
             purchased: transaction[5],
             finalised: transaction[6],
             rated: transaction[7],
-            rating: transaction[8]
+            rating: new BigNumber(transaction[8])
         };
     }
 
@@ -428,6 +428,24 @@ export default class RepuxWeb3Api {
         });
 
         return this._getTransactionResult(dataProductAddress, result);
+    }
+
+    /**
+     * Returns all buyers addresses by DataProduct address
+     * @param dataProductAddress
+     * @param account
+     * @returns {Promise<string[]>}
+     */
+    async getDataProductBuyersAddresses(dataProductAddress, account) {
+        if (!account) {
+            account = await this.getDefaultAccount();
+        }
+
+        const product = await DataProduct.at(dataProductAddress);
+        return product.getBuyersAddresses({
+            from: account,
+            gas: PRODUCT_PURCHASE_CANCEL_GAS_LIMIT
+        });
     }
 
     _getTransactionResult(address, result) {

@@ -14,7 +14,7 @@ export enum DataProductUpdateAction {
 export interface DataProductEvent {
   dataProductAddress: string;
   userAddress: string;
-  dataProductUpdateAction: DataProductUpdateAction;
+  action: DataProductUpdateAction;
   blockNumber: number;
 }
 
@@ -26,6 +26,7 @@ export interface TransactionResult {
 }
 
 export interface DataProductTransaction {
+  buyerAddress?: string;
   publicKey: string;
   buyerMetaHash: string;
   price: BigNumber;
@@ -75,7 +76,7 @@ export default class RepuxWeb3Api {
    * @returns {Promise<any>}
    */
   init(): Promise<any>;
-  
+
   /**
    * Returns default account
    * @returns {Promise<string>} Default account
@@ -185,4 +186,11 @@ export default class RepuxWeb3Api {
    * @param account
    */
   withdrawFundsFromDataProduct(dataProductAddress: string, account?: string): Promise<TransactionResult>
+
+  /**
+   * Returns all buyers addresses by DataProduct address
+   * @param dataProductAddress
+   * @param account
+   */
+  getDataProductBuyersAddresses(dataProductAddress: string, account?: string): Promise<string[]>
 }
