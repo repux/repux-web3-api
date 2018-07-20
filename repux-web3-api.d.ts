@@ -26,10 +26,14 @@ export interface TransactionResult {
 }
 
 export interface DataProductTransaction {
-  buyerAddress?: string;
+  dataProductAddress: string;
+  buyerAddress: string;
   publicKey: string;
   buyerMetaHash: string;
+  rateDeadline: Date;
+  deliveryDeadline: Date;
   price: BigNumber;
+  fee: BigNumber;
   purchased: boolean;
   finalised: boolean;
   rated: boolean;
@@ -100,10 +104,10 @@ export default class RepuxWeb3Api {
    * Creates product contract
    * @param metaFileHash
    * @param price
-   * @param daysForDeliver
+   * @param daysToDeliver
    * @param account
    */
-  createDataProduct(metaFileHash: string, price: BigNumber, daysForDeliver: number, account?: string): Promise<TransactionResult>;
+  createDataProduct(metaFileHash: string, price: BigNumber, daysToDeliver: number, account?: string): Promise<TransactionResult>;
 
   /**
    * Watches for DataProductUpdate events on blockchain
@@ -193,4 +197,12 @@ export default class RepuxWeb3Api {
    * @param account
    */
   getDataProductBuyersAddresses(dataProductAddress: string, account?: string): Promise<string[]>
+
+  /**
+   * Rates data product purchase transaction (can be called only by buyer)
+   * @param dataProductAddress
+   * @param score
+   * @param account
+   */
+  rateDataProductPurchase(dataProductAddress: string, score: BigNumber, account?: string): Promise<TransactionResult>
 }

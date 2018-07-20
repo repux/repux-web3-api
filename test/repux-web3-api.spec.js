@@ -1,7 +1,6 @@
 /* eslint no-unused-expressions: 0 */
 import { expect } from 'chai';
 import RepuxWeb3Api, {
-    DataProductUpdateAction,
     INIT_STATUS_INITIALIZED,
     INIT_STATUS_ALREADY_INITIALIZED
 } from '../src/repux-web3-api';
@@ -17,7 +16,7 @@ let web3,
 
 describe('RepuX Web3 API', () => {
     const metaFileHash = 'SOME_HASH';
-    const daysForDeliver = 0;
+    const daysToDeliver = 0;
     const price = new BigNumber(1.1);
 
     before(async () => {
@@ -124,7 +123,7 @@ describe('RepuX Web3 API', () => {
 
     describe('createDataProduct()', () => {
         it('should call createDataProduct() method on _registry object', async () => {
-            const result = await repuxWeb3Api.createDataProduct(metaFileHash, price, daysForDeliver, DEFAULT_ACCOUNT);
+            const result = await repuxWeb3Api.createDataProduct(metaFileHash, price, daysToDeliver, DEFAULT_ACCOUNT);
             expect(result.status).to.equal('0x01');
             createdProduct = result;
         });
@@ -154,7 +153,6 @@ describe('RepuX Web3 API', () => {
             expect(result.address).to.equal(createdProduct.address);
             expect(result.owner).to.equal(DEFAULT_ACCOUNT);
             expect(result.sellerMetaHash).to.equal('SOME_HASH');
-            expect(result.totalRating.toString()).to.equal(DataProductUpdateAction.CREATE);
             expect(result.price.toString()).to.equal('1.1');
             expect(result.disabled).to.be.false;
         });
@@ -166,7 +164,6 @@ describe('RepuX Web3 API', () => {
                 const result = await repuxWeb3Api.purchaseDataProduct(createdProduct.address, 'SOME_PUBLIC_KEY', SECONDARY_ACCOUNT);
                 expect(result.status).to.equal('0x01');
                 expect(result.address).to.equal(createdProduct.address);
-                expect(true).to.be.true;
             } catch (error) {
                 expect(false).to.be.true;
             }
@@ -218,7 +215,6 @@ describe('RepuX Web3 API', () => {
                 const result = await repuxWeb3Api.finaliseDataProductPurchase(createdProduct.address, SECONDARY_ACCOUNT, 'SOME_HASH');
                 expect(result.status).to.equal('0x01');
                 expect(result.address).to.equal(createdProduct.address);
-                expect(true).to.be.true;
             } catch (error) {
                 console.log(error);
                 expect(false).to.be.true;
@@ -248,7 +244,25 @@ describe('RepuX Web3 API', () => {
                 expect(result.status).to.equal('0x01');
                 const balanceAfter = await repuxWeb3Api.getBalance(createdProduct.address);
                 expect(balanceAfter.toString()).to.equal('0');
-                expect(true).to.be.true;
+            } catch (error) {
+                console.log(error);
+                expect(false).to.be.true;
+            }
+        });
+    });
+
+    describe('getDataProductBuyersAddresses()', () => {
+        it('should return buyers addresses array', async () => {
+            const addresses = await repuxWeb3Api.getDataProductBuyersAddresses(createdProduct.address);
+            expect(addresses).to.deep.equal([ SECONDARY_ACCOUNT ]);
+        });
+    });
+
+    describe('rateDataProductPurchase()', () => {
+        it('shouldn\'t throw any errors', async () => {
+            try {
+                const result = await repuxWeb3Api.rateDataProductPurchase(createdProduct.address, new BigNumber(2), SECONDARY_ACCOUNT);
+                expect(result.status).to.equal('0x01');
             } catch (error) {
                 console.log(error);
                 expect(false).to.be.true;
@@ -261,7 +275,6 @@ describe('RepuX Web3 API', () => {
             try {
                 const result = await repuxWeb3Api.disableDataProduct(createdProduct.address);
                 expect(result.status).to.equal('0x01');
-                expect(true).to.be.true;
                 const product = await repuxWeb3Api.getDataProduct(createdProduct.address);
                 expect(product.disabled).to.be.true;
             } catch (error) {
@@ -274,11 +287,10 @@ describe('RepuX Web3 API', () => {
     describe('cancelPurchase()', () => {
         it('shouldn\'t throw any errors', async () => {
             try {
-                const product = await repuxWeb3Api.createDataProduct(metaFileHash, price, daysForDeliver, DEFAULT_ACCOUNT);
+                const product = await repuxWeb3Api.createDataProduct(metaFileHash, price, daysToDeliver, DEFAULT_ACCOUNT);
                 await repuxWeb3Api.purchaseDataProduct(product.address, 'SOME_PUBLIC_KEY', SECONDARY_ACCOUNT);
                 const result = await repuxWeb3Api.cancelDataProductPurchase(product.address, SECONDARY_ACCOUNT);
                 expect(result.status).to.equal('0x01');
-                expect(true).to.be.true;
             } catch (error) {
                 console.log(error);
                 expect(false).to.be.true;
