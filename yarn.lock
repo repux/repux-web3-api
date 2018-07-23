@@ -26,9 +26,9 @@
     node-fetch "^2.1.1"
     url-template "^2.0.8"
 
-"@repux/repux-smart-contracts@git+ssh://git@github.com:repux/repux-smart-contracts#237851e2d1e420cf261e58120e6eb8bf80ed7827":
+"@repux/repux-smart-contracts@git+ssh://git@github.com:repux/repux-smart-contracts#307c6f1493a05e6f4dd61a064faf60e4f8c6ed8d":
   version "1.1.1"
-  resolved "git+ssh://git@github.com:repux/repux-smart-contracts#237851e2d1e420cf261e58120e6eb8bf80ed7827"
+  resolved "git+ssh://git@github.com:repux/repux-smart-contracts#307c6f1493a05e6f4dd61a064faf60e4f8c6ed8d"
   dependencies:
     truffle "^4.0.1"
 
