@@ -14,6 +14,7 @@ export const PRODUCT_PURCHASE_GAS_LIMIT = 4000000;
 export const PRODUCT_PURCHASE_APPROVE_GAS_LIMIT = 4000000;
 export const PRODUCT_PURCHASE_CANCEL_GAS_LIMIT = 4000000;
 export const PRODUCT_WITHDRAW_GAS_LIMIT = 4000000;
+export const PRODUCT_PURCHASE_RATE_GAS_LIMIT = 4000000;
 
 export const INIT_STATUS_INITIALIZED = 0;
 export const INIT_STATUS_ALREADY_INITIALIZED = 1;
@@ -172,11 +173,11 @@ export default class RepuxWeb3Api {
      * Creates product contract
      * @param {string} metaFileHash - Hash of meta file containing all data required to product publication
      * @param {BigNumber} price - Product price
-     * @param {number} daysForDeliver - Days for deliver
+     * @param {number} daysToDeliver - Days for deliver
      * @param {string} [account=web3.eth.defaultAccount] - Account address
      * @returns {Promise<*>}
      */
-    async createDataProduct(metaFileHash, price, daysForDeliver, account) {
+    async createDataProduct(metaFileHash, price, daysToDeliver, account) {
         if (!account) {
             account = await this.getDefaultAccount();
         }
@@ -184,7 +185,7 @@ export default class RepuxWeb3Api {
         const result = await this.getRegistryContract().createDataProduct(
             metaFileHash,
             this._web3.toWei(price.toString()),
-            daysForDeliver,
+            daysToDeliver,
             {
                 from: account,
                 gas: PRODUCT_CREATION_GAS_LIMIT
@@ -222,8 +223,8 @@ export default class RepuxWeb3Api {
     /**
      * Returns DataProduct data
      * @param {string} dataProductAddress
-     * @returns {Promise<{address: string, owner: string, price: BigNumber, sellerMetaHash: string, totalRating: BigNumber,
-     * buyersDeposit: BigNumber, fundsAccumulated: BigNumber}, disabled: boolean>}
+     * @returns {Promise<{address: string, owner: string, price: BigNumber, sellerMetaHash: string, buyersDeposit: BigNumber,
+     * fundsAccumulated: BigNumber, disabled: boolean}>}
      */
     async getDataProduct(dataProductAddress) {
         const product = await DataProduct.at(dataProductAddress);
@@ -233,7 +234,6 @@ export default class RepuxWeb3Api {
             owner: await product.owner.call(),
             price: this._web3.fromWei(await product.price.call()),
             sellerMetaHash: await product.sellerMetaHash.call(),
-            totalRating: await product.getTotalRating.call(),
             buyersDeposit: this._web3.fromWei(await product.buyersDeposit.call()),
             fundsAccumulated: await this.getBalance(dataProductAddress),
             disabled: await product.disabled.call()
@@ -244,22 +244,42 @@ export default class RepuxWeb3Api {
      * Returns transaction on DataProduct by buyerAddress
      * @param {string} dataProductAddress
      * @param {string} buyerAddress
-     * @returns {Promise<{publicKey: string, buyerMetaHash: string, price: BigNumber, purchased: boolean, approved: boolean, rated: boolean, rating: BigNumber}>}
+     * @returns {Promise<{publicKey: string, buyerMetaHash: string, rateDeadline: Date, deliveryDeadline: Date,
+     * price: BigNumber, purchased: boolean, finalised: boolean, rated: boolean, rating: BigNumber}>}
      */
     async getDataProductTransaction(dataProductAddress, buyerAddress) {
         const product = await DataProduct.at(dataProductAddress);
         const transaction = await product.getTransactionData(buyerAddress);
+        const [
+            publicKey,
+            buyerMetaHash,
+            rateDeadline,
+            deliveryDeadline,
+            price,
+            fee,
+            purchased,
+            finalised,
+            rated,
+            rating
+        ] = transaction;
+
+        if (!purchased) {
+            return null;
+        }
 
         return {
-            publicKey: transaction[0],
-            buyerMetaHash: transaction[1],
-            deliveryDeadline: new Date(transaction[2].toNumber() * 1000),
-            price: new BigNumber(this._web3.fromWei(transaction[3])),
-            fee: new BigNumber(this._web3.fromWei(transaction[4])),
-            purchased: transaction[5],
-            finalised: transaction[6],
-            rated: transaction[7],
-            rating: new BigNumber(transaction[8])
+            dataProductAddress,
+            buyerAddress,
+            publicKey,
+            buyerMetaHash,
+            rateDeadline: new Date(rateDeadline.toNumber() * 1000),
+            deliveryDeadline: new Date(deliveryDeadline.toNumber() * 1000),
+            price: new BigNumber(this._web3.fromWei(price)),
+            fee: new BigNumber(this._web3.fromWei(fee)),
+            purchased,
+            finalised,
+            rated,
+            rating: rating ? new BigNumber(rating) : undefined
         };
     }
 
@@ -366,7 +386,6 @@ export default class RepuxWeb3Api {
             account = await this.getDefaultAccount();
         }
 
-
         return this.getRegistryContract().getDataCreatedFor.call(account);
     }
 
@@ -446,6 +465,27 @@ export default class RepuxWeb3Api {
             from: account,
             gas: PRODUCT_PURCHASE_CANCEL_GAS_LIMIT
         });
+    }
+
+    /**
+     * Rates data product purchase transaction (can be called only by buyer)
+     * @param {string} dataProductAddress
+     * @param {BigNumber} score
+     * @param {string} account
+     * @returns {Promise<*>}
+     */
+    async rateDataProductPurchase(dataProductAddress, score, account) {
+        if (!account) {
+            account = await this.getDefaultAccount();
+        }
+
+        const product = await DataProduct.at(dataProductAddress);
+        const result = await product.rate(score.toString(), {
+            from: account,
+            gas: PRODUCT_PURCHASE_RATE_GAS_LIMIT
+        });
+
+        return this._getTransactionResult(dataProductAddress, result);
     }
 
     _getTransactionResult(address, result) {
