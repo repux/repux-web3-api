@@ -493,7 +493,9 @@ export default class RepuxWeb3Api {
             address,
             blockNumber: result.receipt.blockNumber,
             blockHash: result.receipt.blockHash,
-            status: result.receipt.status
+            status: result.receipt.status,
+            gasUsed: result.receipt.gasUsed,
+            transactionHash: result.receipt.transactionHash
         };
     }
 }
