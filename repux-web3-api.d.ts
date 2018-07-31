@@ -23,6 +23,8 @@ export interface TransactionResult {
   blockNumber: string;
   blockHash: string;
   status: string;
+  transactionHash: string;
+  gasUsed: number;
 }
 
 export interface DataProductTransaction {
