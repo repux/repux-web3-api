@@ -19,7 +19,7 @@
     "protocol"
   ],
   "scripts": {
-    "prebuild": "rm -Rf contracts && truffle compile --contracts_build_directory=./contracts --contracts_directory=./node_modules/@repux/repux-smart-contracts/contracts",
+    "prebuild": "rm -Rf contracts && truffle compile --contracts_build_directory=./contracts --contracts_directory=./node_modules/@repux/repux-smart-contracts/contracts && ts-node contract-minifier",
     "build": "WEBPACK_ENV=build webpack --mode production",
     "dev": "yarn prebuild && WEBPACK_ENV=dev webpack --mode development --progress --colors --watch",
     "test": "yarn prebuild && karma start --single-run --browsers ChromeHeadless",
@@ -27,7 +27,8 @@
     "release": "semantic-release"
   },
   "devDependencies": {
-    "@repux/repux-smart-contracts": "git+ssh://git@github.com:repux/repux-smart-contracts#620591b7ee2e6376ffdcab8045d2194952b35f76",
+    "@types/node": "^10.5.4",
+    "@repux/repux-smart-contracts": "git+ssh://git@github.com:repux/repux-smart-contracts#4d393c38c00268de56723b3f6ef103ec57ea8aef",
     "@semantic-release/git": "^5.0.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
@@ -50,6 +51,8 @@
     "mocha": "^5.1.1",
     "semantic-release": "^15.4.0",
     "truffle-contract": "^3.0.5",
+    "ts-node": "^7.0.0",
+    "typescript": "^3.0.1",
     "webpack": "^4.8.3",
     "webpack-cli": "^2.1.3"
   },
