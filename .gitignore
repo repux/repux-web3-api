@@ -2,6 +2,6 @@ node_modules/
 .idea/
 contracts
 build/tests/
-docs/coverage
+coverage
 
 yarn-error.log

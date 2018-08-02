@@ -1,43 +1,31 @@
 const webpackConfig = require('./webpack.config');
-delete webpackConfig.entry;
-delete webpackConfig.devtool;
-webpackConfig.mode = 'development';
 
 module.exports = function (config) {
     config.set({
+        basePath: '',
         frameworks: ['mocha', 'chai'],
-        files: [
-            'test/*.spec.js'
-        ],
-        reporters: ['mocha'],
+        files: ['test/**/*.spec.ts'],
+        preprocessors: {
+            'src/**/*.ts': ['tslint', 'coverage'],
+            'test/**/*.spec.ts': ['tslint', 'webpack']
+        },
+
+        webpack: {
+            module: webpackConfig().module,
+            resolve: webpackConfig().resolve,
+            node: {
+                fs: 'empty'
+            }
+        },
+        reporters: ['mocha', 'coverage'],
         port: 9877,
         colors: true,
         logLevel: config.LOG_INFO,
         browsers: ['ChromeHeadless'],
         autoWatch: false,
-        // singleRun: false, // Karma captures browsers, runs the tests and exits
         concurrency: Infinity,
-
-        preprocessors: {
-            'src/!(*.spec)+(*.js)': ['eslint'],
-            'test/*.spec.js': ['eslint', 'webpack']
-        },
-
-        webpack: webpackConfig,
-
-        webpackMiddleware: {
-            stats: 'errors-only'
-        },
-
-        client: {
-            captureConsole: true,
-            chai: {
-                includeStack: true
-            }
-        },
-
-        mochaReporter: {
-            showDiff: true
+        mime: {
+            'text/x-typescript': ['ts', 'tsx']
         }
     });
 };

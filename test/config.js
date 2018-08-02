@@ -1,5 +1,0 @@
-export default {
-    ETH_NODE_URL: 'http://localhost:8545',
-    REGISTRY_CONTRACT_ADDRESS: '0x0fe6a11f60c62e8f2a1b2d6b0c12133e4616fe7a',
-    TOKEN_CONTRACT_ADDRESS: '0xbd83c21e6f0a9547abe908c6faa02a55512d57b4'
-};
