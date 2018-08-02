@@ -1,7 +1,8 @@
 import contract from 'truffle-contract';
 import RegistryArtifacts from '../contracts/Registry';
-import DemoTokenArtifacts from '../contracts/DemoToken';
+import TokenArtifacts from '../contracts/DemoToken';
 import DataProductArtifacts from '../contracts/DataProduct';
+import TransactionArtifacts from '../contracts/Transaction';
 import packageConfig from '../package';
 import BigNumber from 'bignumber.js';
 import { DataProductUpdateAction } from './data-product-update-action';
@@ -22,8 +23,9 @@ export const INIT_STATUS_ALREADY_INITIALIZED = 1;
 const ERR_INIT = 'Please initialize library first using `init()` method';
 
 let Registry;
-let DemoToken;
+let Token;
 let DataProduct;
+let Transaction;
 
 // Workaround for a compatibility issue between web3@1.0.0-beta.29 and truffle-contract@3.0.3
 // https://github.com/trufflesuite/truffle-contract/issues/57#issuecomment-331300494
@@ -57,11 +59,11 @@ export default class RepuxWeb3Api {
 
         this._registryContractAddress = contracts.REGISTRY_CONTRACT_ADDRESS;
 
-        if (!contracts.DEMOTOKEN_CONTRACT_ADDRESS) {
-            throw new Error('Repux DemoToken contract address should be set!');
+        if (!contracts.TOKEN_CONTRACT_ADDRESS) {
+            throw new Error('Repux Token contract address should be set!');
         }
 
-        this._demoTokenContractAddress = contracts.DEMOTOKEN_CONTRACT_ADDRESS;
+        this._tokenContractAddress = contracts.TOKEN_CONTRACT_ADDRESS;
 
         this._web3 = fixTruffleContractCompatibilityIssue(web3);
         this._provider = this._web3.currentProvider;
@@ -86,17 +88,19 @@ export default class RepuxWeb3Api {
             }
 
             Registry = contract(RegistryArtifacts);
-            DemoToken = contract(DemoTokenArtifacts);
+            Token = contract(TokenArtifacts);
             DataProduct = contract(DataProductArtifacts);
+            Transaction = contract(TransactionArtifacts);
 
             Registry.setProvider(this._provider);
-            DemoToken.setProvider(this._provider);
+            Token.setProvider(this._provider);
             DataProduct.setProvider(this._provider);
+            Transaction.setProvider(this._provider);
 
             Registry.at(this._registryContractAddress)
                 .then(registry => {
                     this._registry = registry;
-                    return DemoToken.at(this._demoTokenContractAddress);
+                    return Token.at(this._tokenContractAddress);
                 })
                 .then(token => {
                     this._token = token;
@@ -110,10 +114,10 @@ export default class RepuxWeb3Api {
     }
 
     /**
-     * Returns DemoToken contract instance
+     * Returns Token contract instance
      * @returns {T | *}
      */
-    getDemoTokenContract() {
+    getTokenContract() {
         if (!this.initialized) {
             throw new Error(ERR_INIT);
         }
@@ -155,7 +159,7 @@ export default class RepuxWeb3Api {
             account = await this.getDefaultAccount();
         }
 
-        const result = await this.getDemoTokenContract().balanceOf.call(account);
+        const result = await this.getTokenContract().balanceOf.call(account);
         return new BigNumber(this._web3.fromWei(result));
     }
 
@@ -249,36 +253,28 @@ export default class RepuxWeb3Api {
      */
     async getDataProductTransaction(dataProductAddress, buyerAddress) {
         const product = await DataProduct.at(dataProductAddress);
-        const transaction = await product.getTransactionData(buyerAddress);
-        const [
-            publicKey,
-            buyerMetaHash,
-            rateDeadline,
-            deliveryDeadline,
-            price,
-            fee,
-            purchased,
-            finalised,
-            rated,
-            rating
-        ] = transaction;
+        const transactionAddress = await product.getTransactionFor(buyerAddress);
 
-        if (!purchased) {
+        if (parseInt(transactionAddress, 0) === 0) {
             return null;
         }
 
+        const transaction = await Transaction.at(transactionAddress);
+        const rating = await transaction.rating.call();
+
         return {
+            address: transactionAddress,
             dataProductAddress,
             buyerAddress,
-            publicKey,
-            buyerMetaHash,
-            rateDeadline: new Date(rateDeadline.toNumber() * 1000),
-            deliveryDeadline: new Date(deliveryDeadline.toNumber() * 1000),
-            price: new BigNumber(this._web3.fromWei(price)),
-            fee: new BigNumber(this._web3.fromWei(fee)),
-            purchased,
-            finalised,
-            rated,
+            publicKey: await transaction.buyerPublicKey.call(),
+            buyerMetaHash: await transaction.buyerMetaHash.call(),
+            rateDeadline: new Date((await transaction.rateDeadline.call()).toNumber() * 1000),
+            deliveryDeadline: new Date((await transaction.deliveryDeadline.call()).toNumber() * 1000),
+            price: new BigNumber(this._web3.fromWei(await transaction.price.call())),
+            fee: new BigNumber(this._web3.fromWei(await transaction.fee.call())),
+            purchased: true,
+            finalised: await transaction.finalised.call(),
+            rated: await transaction.rated.call(),
             rating: rating ? new BigNumber(rating) : undefined
         };
     }
@@ -299,17 +295,17 @@ export default class RepuxWeb3Api {
         const product = await DataProduct.at(dataProductAddress);
         const price = await product.price.call();
 
-        try {
-            await this.getDemoTokenContract().approve(dataProductAddress, price, {
-                from: account
-            });
+        await this.getTokenContract().approve(dataProductAddress, price, {
+            from: account
+        });
 
+        try {
             result = await product.purchase(publicKey, {
                 from: account,
                 gas: PRODUCT_PURCHASE_GAS_LIMIT
             });
         } catch (error) {
-            await this.getDemoTokenContract().approve(dataProductAddress, 0, {
+            await this.getTokenContract().approve(dataProductAddress, 0, {
                 from: account
             });
 

@@ -23,7 +23,7 @@ describe('RepuX Web3 API', () => {
         web3 = new Web3(new Web3.providers.HttpProvider(config.ETH_NODE_URL));
         repuxWeb3Api = new RepuxWeb3Api(web3, {
             REGISTRY_CONTRACT_ADDRESS: config.REGISTRY_CONTRACT_ADDRESS,
-            DEMOTOKEN_CONTRACT_ADDRESS: config.DEMOTOKEN_CONTRACT_ADDRESS
+            TOKEN_CONTRACT_ADDRESS: config.TOKEN_CONTRACT_ADDRESS
         });
 
         await repuxWeb3Api.init();
@@ -45,10 +45,10 @@ describe('RepuX Web3 API', () => {
             expect(() => new RepuxWeb3Api(web3)).to.throw('Repux Registry contract address should be set!');
         });
 
-        it('should throw an error when DemoToken Contract address is not set', () => {
+        it('should throw an error when Token Contract address is not set', () => {
             expect(() => new RepuxWeb3Api(web3, {
                 REGISTRY_CONTRACT_ADDRESS: config.REGISTRY_CONTRACT_ADDRESS
-            })).to.throw('Repux DemoToken contract address should be set!');
+            })).to.throw('Repux Token contract address should be set!');
         });
     });
 
@@ -62,7 +62,7 @@ describe('RepuX Web3 API', () => {
         it('should throw an error when wrong contract address provided', async () => {
             const api = new RepuxWeb3Api(web3, {
                 REGISTRY_CONTRACT_ADDRESS: '0xc2d327375dd73b132d1171aadf7a205d3a9b7d8g',
-                DEMOTOKEN_CONTRACT_ADDRESS: config.DEMOTOKEN_CONTRACT_ADDRESS
+                TOKEN_CONTRACT_ADDRESS: config.TOKEN_CONTRACT_ADDRESS
             });
 
             let errorThrown = false;
@@ -78,7 +78,7 @@ describe('RepuX Web3 API', () => {
         it('should setup contracts only once', async () => {
             const api = new RepuxWeb3Api(web3, {
                 REGISTRY_CONTRACT_ADDRESS: config.REGISTRY_CONTRACT_ADDRESS,
-                DEMOTOKEN_CONTRACT_ADDRESS: config.DEMOTOKEN_CONTRACT_ADDRESS
+                TOKEN_CONTRACT_ADDRESS: config.TOKEN_CONTRACT_ADDRESS
             });
             let status = await api.init();
             expect(status).to.equal(INIT_STATUS_INITIALIZED);
@@ -165,6 +165,7 @@ describe('RepuX Web3 API', () => {
                 expect(result.status).to.equal('0x01');
                 expect(result.address).to.equal(createdProduct.address);
             } catch (error) {
+                console.log(error);
                 expect(false).to.be.true;
             }
         });
