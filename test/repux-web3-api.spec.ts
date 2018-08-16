@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import {
   RepuxWeb3Api,
   INIT_STATUS_INITIALIZED,
-  INIT_STATUS_ALREADY_INITIALIZED
+  INIT_STATUS_ALREADY_INITIALIZED, TransactionStatus
 } from '../src/repux-web3-api';
 import BigNumber from 'bignumber.js';
 // @ts-ignore
@@ -128,7 +128,7 @@ describe('RepuX Web3 API', () => {
     it('should call createDataProduct() method on _registry object', async () => {
       const transactionHash = await repuxWeb3Api.createDataProduct(metaFileHash, price, daysToDeliver, DEFAULT_ACCOUNT);
       const result = await repuxWeb3Api.waitForTransactionResult(transactionHash);
-      expect(result.status).to.equal('0x01');
+      expect(result.status).to.equal(TransactionStatus.SUCCESSFUL);
       const createdProducts = await repuxWeb3Api.getCreatedDataProducts(DEFAULT_ACCOUNT);
       createdProduct = createdProducts[ createdProducts.length - 1 ];
     });
@@ -153,7 +153,7 @@ describe('RepuX Web3 API', () => {
 
         const transactionHash = await repuxWeb3Api.purchaseDataProduct(createdProduct, 'SOME_PUBLIC_KEY', SECONDARY_ACCOUNT);
         const result = await repuxWeb3Api.waitForTransactionResult(transactionHash);
-        expect(result.status).to.equal('0x01');
+        expect(result.status).to.equal(TransactionStatus.SUCCESSFUL);
       } catch (error) {
         console.log(error);
         expect(false).to.equal(true);
@@ -212,7 +212,7 @@ describe('RepuX Web3 API', () => {
       try {
         const transactionHash = await repuxWeb3Api.finaliseDataProductPurchase(createdProduct, SECONDARY_ACCOUNT, 'SOME_HASH');
         const result = await repuxWeb3Api.waitForTransactionResult(transactionHash);
-        expect(result.status).to.equal('0x01');
+        expect(result.status).to.equal(TransactionStatus.SUCCESSFUL);
       } catch (error) {
         console.log(error);
         expect(false).to.equal(true);
@@ -241,7 +241,7 @@ describe('RepuX Web3 API', () => {
 
         const transactionHash = await repuxWeb3Api.withdrawFundsFromDataProduct(createdProduct);
         const result = await repuxWeb3Api.waitForTransactionResult(transactionHash);
-        expect(result.status).to.equal('0x01');
+        expect(result.status).to.equal(TransactionStatus.SUCCESSFUL);
 
         const balanceAfter = await repuxWeb3Api.getBalance(createdProduct);
         expect(balanceAfter.toString()).to.equal('0');
@@ -264,7 +264,7 @@ describe('RepuX Web3 API', () => {
       try {
         const transactionHash = await repuxWeb3Api.rateDataProductPurchase(createdProduct, new BigNumber(2), SECONDARY_ACCOUNT);
         const result = await repuxWeb3Api.waitForTransactionResult(transactionHash);
-        expect(result.status).to.equal('0x01');
+        expect(result.status).to.equal(TransactionStatus.SUCCESSFUL);
       } catch (error) {
         console.log(error);
         expect(false).to.equal(true);
@@ -277,7 +277,7 @@ describe('RepuX Web3 API', () => {
       try {
         const transactionHash = await repuxWeb3Api.disableDataProduct(createdProduct);
         const result = await repuxWeb3Api.waitForTransactionResult(transactionHash);
-        expect(result.status).to.equal('0x01');
+        expect(result.status).to.equal(TransactionStatus.SUCCESSFUL);
 
         const product = await repuxWeb3Api.getDataProduct(createdProduct);
         expect(product.disabled).to.equal(true);
@@ -304,7 +304,7 @@ describe('RepuX Web3 API', () => {
 
         const transactionHash = await repuxWeb3Api.cancelDataProductPurchase(product, SECONDARY_ACCOUNT);
         const result = await repuxWeb3Api.waitForTransactionResult(transactionHash);
-        expect(result.status).to.equal('0x01');
+        expect(result.status).to.equal(TransactionStatus.SUCCESSFUL);
       } catch (error) {
         console.log(error);
         expect(false).to.equal(true);

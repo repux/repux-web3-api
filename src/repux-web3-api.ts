@@ -452,6 +452,7 @@ export class RepuxWeb3Api {
           }
 
           if (result && result.status) {
+            result.status = parseInt('' + result.status, 16);
             clearInterval(interval);
             resolve(result);
           }
