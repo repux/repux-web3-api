@@ -5971,9 +5971,9 @@ replace-ext@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/replace-ext/-/replace-ext-1.0.0.tgz#de63128373fcbf7c3ccfa4de5a480c45a67958eb"
 
-"repux-smart-contracts@git+ssh://git@github.com:repux/repux-smart-contracts#a3ba6c04e655874f14effeb722baddc53282d3fe":
-  version "1.2.0"
-  resolved "git+ssh://git@github.com:repux/repux-smart-contracts#a3ba6c04e655874f14effeb722baddc53282d3fe"
+"repux-smart-contracts@git+ssh://git@github.com:repux/repux-smart-contracts#v1.2.1":
+  version "1.2.1"
+  resolved "git+ssh://git@github.com:repux/repux-smart-contracts#1ec732c71e7e627d27b12fed63f5a38a66298ed4"
   dependencies:
     truffle "^4.0.1"
 

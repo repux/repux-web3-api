@@ -1,6 +1,6 @@
 {
   "name": "repux-web3-api",
-  "version": "1.4.1",
+  "version": "1.5.1",
   "description": "Smart Contract RepuX API",
   "author": "RepuX <support@repux.io>",
   "license": "MIT",
@@ -56,7 +56,7 @@
   "dependencies": {
     "bignumber.js": "^7.2.0",
     "fs-extra": "^7.0.0",
-    "repux-smart-contracts": "git+ssh://git@github.com:repux/repux-smart-contracts#a3ba6c04e655874f14effeb722baddc53282d3fe",
+    "repux-smart-contracts": "git+ssh://git@github.com:repux/repux-smart-contracts#v1.2.1",
     "web3": "^0.20.6"
   }
 }
