@@ -24,7 +24,7 @@ describe('RepuX Web3 API', () => {
   before(async () => {
     web3 = new Web3(new Web3.providers.HttpProvider(config.ETH_NODE_URL));
     repuxWeb3Api = new RepuxWeb3Api(web3, {
-      REGISTRY_CONTRACT_ADDRESS: config.REGISTRY_CONTRACT_ADDRESS,
+      REGISTRY_STORAGE_CONTRACT_ADDRESS: config.REGISTRY_STORAGE_CONTRACT_ADDRESS,
       TOKEN_CONTRACT_ADDRESS: config.TOKEN_CONTRACT_ADDRESS
     });
 
@@ -39,17 +39,13 @@ describe('RepuX Web3 API', () => {
       expect(() => new RepuxWeb3Api(undefined, <any> {})).to.throw('web3 instance is required!');
     });
 
-    it('should throw an error when Registry Contract address is not set', () => {
-      expect(() => new RepuxWeb3Api(web3, <any> {})).to.throw('Repux Registry contract address should be set!');
-    });
-
-    it('should throw an error when Registry Contract address is not set', () => {
-      expect(() => new RepuxWeb3Api(web3, <any> {})).to.throw('Repux Registry contract address should be set!');
+    it('should throw an error when Registry Storage Contract address is not set', () => {
+      expect(() => new RepuxWeb3Api(web3, <any> {})).to.throw('Repux Registry Storage contract address should be set!');
     });
 
     it('should throw an error when Token Contract address is not set', () => {
       expect(() => new RepuxWeb3Api(web3, {
-        REGISTRY_CONTRACT_ADDRESS: config.REGISTRY_CONTRACT_ADDRESS,
+        REGISTRY_STORAGE_CONTRACT_ADDRESS: config.REGISTRY_STORAGE_CONTRACT_ADDRESS,
         TOKEN_CONTRACT_ADDRESS: <any> undefined
       })).to.throw('Repux Token contract address should be set!');
     });
@@ -58,13 +54,13 @@ describe('RepuX Web3 API', () => {
   describe('init()', () => {
     it('should set contract instances', async () => {
       await repuxWeb3Api.init();
-      expect(repuxWeb3Api[ '_registry' ]).to.not.equal(undefined);
+      expect(repuxWeb3Api[ '_registryStorage' ]).to.not.equal(undefined);
       expect(repuxWeb3Api[ '_token' ]).to.not.equal(undefined);
     });
 
     it('should throw an error when wrong contract address provided', async () => {
       const api = new RepuxWeb3Api(web3, {
-        REGISTRY_CONTRACT_ADDRESS: '0xc2d327375dd73b132d1171aadf7a205d3a9b7d8g',
+        REGISTRY_STORAGE_CONTRACT_ADDRESS: '0xc2d327375dd73b132d1171aadf7a205d3a9b7d8g',
         TOKEN_CONTRACT_ADDRESS: config.TOKEN_CONTRACT_ADDRESS
       });
 
@@ -80,7 +76,7 @@ describe('RepuX Web3 API', () => {
 
     it('should setup contracts only once', async () => {
       const api = new RepuxWeb3Api(web3, {
-        REGISTRY_CONTRACT_ADDRESS: config.REGISTRY_CONTRACT_ADDRESS,
+        REGISTRY_STORAGE_CONTRACT_ADDRESS: config.REGISTRY_STORAGE_CONTRACT_ADDRESS,
         TOKEN_CONTRACT_ADDRESS: config.TOKEN_CONTRACT_ADDRESS
       });
       let status = await api.init();

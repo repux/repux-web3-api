@@ -56,7 +56,7 @@
   "dependencies": {
     "bignumber.js": "^7.2.0",
     "fs-extra": "^7.0.0",
-    "repux-smart-contracts": "git+ssh://git@github.com:repux/repux-smart-contracts#v1.2.1",
+    "repux-smart-contracts": "git+ssh://git@github.com:repux/repux-smart-contracts#15f9df08e7626c69979d7201d49ab91454b5111c",
     "web3": "^0.20.6"
   }
 }

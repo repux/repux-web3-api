@@ -1,5 +1,6 @@
 //@ts-ignore
 import contract from 'truffle-contract';
+import RegistryStorageArtifacts from '../contracts/RegistryStorage.json';
 import RegistryArtifacts from '../contracts/Registry.json';
 import TokenArtifacts from '../contracts/DemoToken.json';
 import DataProductArtifacts from '../contracts/DataProduct.json';
@@ -39,6 +40,7 @@ let RegistryContract: any;
 let TokenContract: any;
 let DataProductContract: any;
 let OrderContract: any;
+let RegistryStorageContract: any;
 
 // Workaround for a compatibility issue between web3@1.0.0-beta.29 and truffle-contract@3.0.3
 // https://github.com/trufflesuite/truffle-contract/issues/57#issuecomment-331300494
@@ -57,24 +59,24 @@ function fixTruffleContractCompatibilityIssue(web3: any) {
  * Repux API
  */
 export class RepuxWeb3Api {
-  private readonly _registryContractAddress: string;
+  private readonly _registryStorageContractAddress: string;
   private readonly _tokenContractAddress: string;
   private readonly _web3: any;
   private readonly _provider: any;
   private initialized = false;
-  private _registry: any;
+  private _registryStorage: any;
   private _token: any;
 
-  constructor(web3: any, contracts: { REGISTRY_CONTRACT_ADDRESS: string, TOKEN_CONTRACT_ADDRESS: string }) {
+  constructor(web3: any, contracts: { REGISTRY_STORAGE_CONTRACT_ADDRESS: string, TOKEN_CONTRACT_ADDRESS: string }) {
     if (typeof web3 === 'undefined') {
       throw new Error('web3 instance is required!');
     }
 
-    if (!contracts.REGISTRY_CONTRACT_ADDRESS) {
-      throw new Error('Repux Registry contract address should be set!');
+    if (!contracts.REGISTRY_STORAGE_CONTRACT_ADDRESS) {
+      throw new Error('Repux Registry Storage contract address should be set!');
     }
 
-    this._registryContractAddress = contracts.REGISTRY_CONTRACT_ADDRESS;
+    this._registryStorageContractAddress = contracts.REGISTRY_STORAGE_CONTRACT_ADDRESS;
 
     if (!contracts.TOKEN_CONTRACT_ADDRESS) {
       throw new Error('Repux Token contract address should be set!');
@@ -103,18 +105,20 @@ export class RepuxWeb3Api {
       }
 
       RegistryContract = contract(RegistryArtifacts);
+      RegistryStorageContract = contract(RegistryStorageArtifacts);
       TokenContract = contract(TokenArtifacts);
       DataProductContract = contract(DataProductArtifacts);
       OrderContract = contract(OrderArtifacts);
 
       RegistryContract.setProvider(this._provider);
+      RegistryStorageContract.setProvider(this._provider);
       TokenContract.setProvider(this._provider);
       DataProductContract.setProvider(this._provider);
       OrderContract.setProvider(this._provider);
 
-      RegistryContract.at(this._registryContractAddress)
-        .then((registry: any) => {
-          this._registry = registry;
+      RegistryStorageContract.at(this._registryStorageContractAddress)
+        .then((registryStorage: any) => {
+          this._registryStorage = registryStorage;
           return TokenContract.at(this._tokenContractAddress);
         })
         .then((token: any) => {
@@ -131,7 +135,7 @@ export class RepuxWeb3Api {
   /**
    * Returns Token contract instance
    */
-  getTokenContract() {
+  getTokenContract(): any {
     if (!this.initialized) {
       throw new Error(ERR_INIT);
     }
@@ -140,14 +144,24 @@ export class RepuxWeb3Api {
   }
 
   /**
+   * Return current registry address
+   */
+  async getRegistryAddress(): Promise<string> {
+    return this._registryStorage.getCurrentRegistryAddress();
+  }
+
+  /**
    * Returns Registry contract instance
    */
-  getRegistryContract() {
+  async getRegistryContract(): Promise<any> {
     if (!this.initialized) {
       throw new Error(ERR_INIT);
     }
 
-    return this._registry;
+    return new Promise(async resolve => {
+      const registryAddress = await this.getRegistryAddress();
+      RegistryContract.at(registryAddress).then((registry: any) => resolve(registry));
+    })
   }
 
   /**
@@ -190,7 +204,7 @@ export class RepuxWeb3Api {
       account = await this.getDefaultAccount();
     }
 
-    return this.getRegistryContract().createDataProduct.sendTransaction(
+    return (await this.getRegistryContract()).createDataProduct.sendTransaction(
       metaFileHash,
       this._web3.toWei(price.toString()),
       daysToDeliver,
@@ -334,7 +348,7 @@ export class RepuxWeb3Api {
       account = await this.getDefaultAccount();
     }
 
-    return this.getRegistryContract().getDataPurchasedFor.call(account);
+    return (await this.getRegistryContract()).getDataPurchasedFor.call(account);
   }
 
   /**
@@ -345,7 +359,7 @@ export class RepuxWeb3Api {
       account = await this.getDefaultAccount();
     }
 
-    return this.getRegistryContract().getDataFinalisedFor.call(account);
+    return (await this.getRegistryContract()).getDataFinalisedFor.call(account);
   }
 
   /**
@@ -356,7 +370,7 @@ export class RepuxWeb3Api {
       account = await this.getDefaultAccount();
     }
 
-    return this.getRegistryContract().getDataCreatedFor.call(account);
+    return (await this.getRegistryContract()).getDataCreatedFor.call(account);
   }
 
   /**
