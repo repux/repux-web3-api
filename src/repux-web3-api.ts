@@ -13,6 +13,9 @@ import { DataProduct } from './data-product';
 import { TransactionLog } from './transaction-log';
 import { TransactionReceipt } from './transaction-receipt';
 import { TransactionStatus } from './transaction-status';
+import { VersionController } from './version-controller';
+import { ContractType } from './contract-type';
+import { Method } from './method';
 
 export {
   DataProductUpdateAction,
@@ -59,6 +62,7 @@ function fixTruffleContractCompatibilityIssue(web3: any) {
  * Repux API
  */
 export class RepuxWeb3Api {
+  public readonly versionController: VersionController;
   private readonly _registryStorageContractAddress: string;
   private readonly _tokenContractAddress: string;
   private readonly _web3: any;
@@ -86,6 +90,7 @@ export class RepuxWeb3Api {
 
     this._web3 = fixTruffleContractCompatibilityIssue(web3);
     this._provider = this._web3.currentProvider;
+    this.versionController = new VersionController();
   }
 
   /**
@@ -204,7 +209,11 @@ export class RepuxWeb3Api {
       account = await this.getDefaultAccount();
     }
 
-    return (await this.getRegistryContract()).createDataProduct.sendTransaction(
+    const registry = await this.getRegistryContract();
+
+    this.versionController.assertMethodSupported(Method.createDataProduct, ContractType.Registry, await registry.version.call());
+
+    return registry.createDataProduct.sendTransaction(
       metaFileHash,
       this._web3.toWei(price.toString()),
       daysToDeliver,
@@ -220,6 +229,8 @@ export class RepuxWeb3Api {
    */
   async getDataProduct(dataProductAddress: string): Promise<DataProduct> {
     const product = await DataProductContract.at(dataProductAddress);
+
+    this.versionController.assertMethodSupported(Method.getDataProduct, ContractType.DataProduct, await product.version.call());
 
     const promises = [
       dataProductAddress,
@@ -249,28 +260,33 @@ export class RepuxWeb3Api {
    */
   async getDataProductOrder(dataProductAddress: string, buyerAddress: string): Promise<DataProductOrder | undefined> {
     const product = await DataProductContract.at(dataProductAddress);
+
+    this.versionController.assertMethodSupported(Method.getDataProductOrder, ContractType.DataProduct, await product.version.call());
+
     const transactionAddress = await product.getOrderFor(buyerAddress);
 
     if (parseInt(transactionAddress, 0) === 0) {
       return;
     }
 
-    const transaction = await OrderContract.at(transactionAddress);
+    const order = await OrderContract.at(transactionAddress);
+
+    this.versionController.assertMethodSupported(Method.getDataProductOrder, ContractType.Order, await order.version.call());
 
     const promises = [
       transactionAddress,
       dataProductAddress,
       buyerAddress,
-      transaction.buyerPublicKey.call(),
-      transaction.buyerMetaHash.call(),
-      transaction.rateDeadline.call(),
-      transaction.deliveryDeadline.call(),
-      transaction.price.call(),
-      transaction.fee.call(),
+      order.buyerPublicKey.call(),
+      order.buyerMetaHash.call(),
+      order.rateDeadline.call(),
+      order.deliveryDeadline.call(),
+      order.price.call(),
+      order.fee.call(),
       true,
-      transaction.finalised.call(),
-      transaction.rated.call(),
-      transaction.rating.call()
+      order.finalised.call(),
+      order.rated.call(),
+      order.rating.call()
     ];
 
     const values = await Promise.all(promises);
@@ -301,6 +317,9 @@ export class RepuxWeb3Api {
     }
 
     const product = await DataProductContract.at(dataProductAddress);
+
+    this.versionController.assertMethodSupported(Method.approveTokensTransferForDataProductPurchase, ContractType.DataProduct, await product.version.call());
+
     const price = await product.price.call();
 
     return this.getTokenContract().approve.sendTransaction(dataProductAddress, price, {
@@ -318,6 +337,8 @@ export class RepuxWeb3Api {
 
     const product = await DataProductContract.at(dataProductAddress);
 
+    this.versionController.assertMethodSupported(Method.purchaseDataProduct, ContractType.DataProduct, await product.version.call());
+
     return product.purchase.sendTransaction(publicKey, {
       from: account,
       gas: PRODUCT_PURCHASE_GAS_LIMIT
@@ -334,6 +355,8 @@ export class RepuxWeb3Api {
 
     const product = await DataProductContract.at(dataProductAddress);
 
+    this.versionController.assertMethodSupported(Method.finaliseDataProductPurchase, ContractType.DataProduct, await product.version.call());
+
     return product.finalise.sendTransaction(buyerAddress, buyerMetaHash, {
       from: account,
       gas: PRODUCT_PURCHASE_APPROVE_GAS_LIMIT
@@ -348,7 +371,11 @@ export class RepuxWeb3Api {
       account = await this.getDefaultAccount();
     }
 
-    return (await this.getRegistryContract()).getDataPurchasedFor.call(account);
+    const registry = await this.getRegistryContract();
+
+    this.versionController.assertMethodSupported(Method.getBoughtDataProducts, ContractType.Registry, await registry.version.call());
+
+    return registry.getDataPurchasedFor.call(account);
   }
 
   /**
@@ -359,7 +386,11 @@ export class RepuxWeb3Api {
       account = await this.getDefaultAccount();
     }
 
-    return (await this.getRegistryContract()).getDataFinalisedFor.call(account);
+    const registry = await this.getRegistryContract();
+
+    this.versionController.assertMethodSupported(Method.getBoughtAndFinalisedDataProducts, ContractType.Registry, await registry.version.call());
+
+    return registry.getDataFinalisedFor.call(account);
   }
 
   /**
@@ -370,7 +401,11 @@ export class RepuxWeb3Api {
       account = await this.getDefaultAccount();
     }
 
-    return (await this.getRegistryContract()).getDataCreatedFor.call(account);
+    const registry = await this.getRegistryContract();
+
+    this.versionController.assertMethodSupported(Method.getCreatedDataProducts, ContractType.Registry, await registry.version.call());
+
+    return registry.getDataCreatedFor.call(account);
   }
 
   /**
@@ -382,6 +417,8 @@ export class RepuxWeb3Api {
     }
 
     const product = await DataProductContract.at(dataProductAddress);
+
+    this.versionController.assertMethodSupported(Method.withdrawFundsFromDataProduct, ContractType.DataProduct, await product.version.call());
 
     return product.withdraw.sendTransaction({
       from: account,
@@ -399,6 +436,8 @@ export class RepuxWeb3Api {
 
     const product = await DataProductContract.at(dataProductAddress);
 
+    this.versionController.assertMethodSupported(Method.disableDataProduct, ContractType.DataProduct, await product.version.call());
+
     return product.disable.sendTransaction({
       from: account,
       gas: PRODUCT_DELETION_GAS_LIMIT
@@ -414,6 +453,8 @@ export class RepuxWeb3Api {
     }
 
     const product = await DataProductContract.at(dataProductAddress);
+
+    this.versionController.assertMethodSupported(Method.cancelDataProductPurchase, ContractType.DataProduct, await product.version.call());
 
     return product.cancelPurchase.sendTransaction({
       from: account,
@@ -431,6 +472,8 @@ export class RepuxWeb3Api {
 
     const product = await DataProductContract.at(dataProductAddress);
 
+    this.versionController.assertMethodSupported(Method.getDataProductBuyersAddresses, ContractType.DataProduct, await product.version.call());
+
     return product.getBuyersAddresses({
       from: account,
       gas: PRODUCT_PURCHASE_CANCEL_GAS_LIMIT
@@ -446,6 +489,8 @@ export class RepuxWeb3Api {
     }
 
     const product = await DataProductContract.at(dataProductAddress);
+
+    this.versionController.assertMethodSupported(Method.rateDataProductPurchase, ContractType.DataProduct, await product.version.call());
 
     return product.rate.sendTransaction(score.toString(), {
       from: account,
