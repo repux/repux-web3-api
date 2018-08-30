@@ -222,9 +222,9 @@ export class RepuxWeb3Api {
     return {
       address: values[ 0 ],
       owner: values[ 1 ],
-      price: this._web3.fromWei(values[ 2 ]),
+      price: new BigNumber(this._web3.fromWei(values[ 2 ])),
       sellerMetaHash: values[ 3 ],
-      buyersDeposit: this._web3.fromWei(values[ 4 ]),
+      buyersDeposit: new BigNumber(this._web3.fromWei(values[ 4 ])),
       fundsAccumulated: values[ 5 ],
       disabled: values[ 6 ]
     };
