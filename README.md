@@ -55,3 +55,15 @@ Semantic-release needs access to at least GitHub **repo** scope. If you don't kn
 [this article](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/). You also have to generate NPM_TOKEN. This 
 token is used only to preparing package.json file. Library won't be published to NPM repository until you add "@semantic-release/npm" to **publish** section
 in `.releaserc` file.
+
+## IDE Settings
+Informations below for IntelliJ IDEA apps (PHPStrom, WebStorm, etc.)
+
+### EditorConfig
+Enable EditorConfig support in `Settings > Editor > Code Style` section. 
+
+### TSLint
+Enable TSLInt support in `Preferences > Languages & Frameworks > TypeScript > TSLint`.
+
+### TypeScript code style
+Use TypeScript code styles settings stored in  `intellij-cs.xml`. Import using `Settings > Editor > Code Style > TypeScript` then `Scheme > Import scheme > IntelliJ IDEA code style xml`.

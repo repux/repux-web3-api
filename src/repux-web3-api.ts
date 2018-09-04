@@ -1,4 +1,4 @@
-//@ts-ignore
+// @ts-ignore-next-line
 import contract from 'truffle-contract';
 import RegistryArtifacts from '../contracts/Registry.json';
 import TokenArtifacts from '../contracts/DemoToken.json';
@@ -154,8 +154,11 @@ export class RepuxWeb3Api {
    * Returns default account
    */
   getDefaultAccount(): Promise<string> {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       this._web3.eth.getAccounts((error: any, accounts: string[]) => {
+        if (error) {
+          reject(error);
+        }
         resolve(accounts[ 0 ]);
       });
     });
@@ -177,8 +180,13 @@ export class RepuxWeb3Api {
    * Returns network Id
    */
   getNetworkId() {
-    return new Promise(resolve => {
-      this._web3.version.getNetwork((err: any, netId: string) => resolve(+netId));
+    return new Promise((resolve, reject) => {
+      this._web3.version.getNetwork((error: any, netId: string) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(+netId);
+      });
     });
   }
 
@@ -313,7 +321,12 @@ export class RepuxWeb3Api {
   /**
    * Finalises data product purchase
    */
-  async finaliseDataProductPurchase(dataProductAddress: string, buyerAddress: string, buyerMetaHash: string, account?: string): Promise<string> {
+  async finaliseDataProductPurchase(
+    dataProductAddress: string,
+    buyerAddress: string,
+    buyerMetaHash: string,
+    account?: string
+  ): Promise<string> {
     if (!account) {
       account = await this.getDefaultAccount();
     }
@@ -448,7 +461,7 @@ export class RepuxWeb3Api {
         this._web3.eth.getTransactionReceipt(transactionHash, async (errTx: any, result: TransactionReceipt) => {
           if (errTx) {
             clearInterval(interval);
-            return reject(errTx)
+            return reject(errTx);
           }
 
           if (result && result.status) {
