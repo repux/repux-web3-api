@@ -150,6 +150,7 @@ describe('RepuX Web3 API', () => {
       try {
         const approveTransactionHash = await repuxWeb3Api.approveTokensTransferForDataProductPurchase(createdProduct, SECONDARY_ACCOUNT);
         await repuxWeb3Api.waitForTransactionResult(approveTransactionHash);
+        expect(await repuxWeb3Api.isTransferForPurchaseApproved(createdProduct, SECONDARY_ACCOUNT)).to.equal(true);
 
         const transactionHash = await repuxWeb3Api.purchaseDataProduct(createdProduct, 'SOME_PUBLIC_KEY', SECONDARY_ACCOUNT);
         const result = await repuxWeb3Api.waitForTransactionResult(transactionHash);

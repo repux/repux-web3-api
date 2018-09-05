@@ -303,6 +303,21 @@ export class RepuxWeb3Api {
   }
 
   /**
+   * Returns true if approveTokensTransferForDataProductPurchase is already called
+   */
+  async isTransferForPurchaseApproved(dataProductAddress: string, account?: string): Promise<Boolean> {
+    if (!account) {
+      account = await this.getDefaultAccount();
+    }
+
+    const product = await DataProductContract.at(dataProductAddress);
+    const price = await product.price.call();
+    const allowance = await this.getTokenContract().allowance.call(account, dataProductAddress);
+
+    return Boolean(new BigNumber(price).eq(allowance));
+  }
+
+  /**
    * Purchases DataProduct
    */
   async purchaseDataProduct(dataProductAddress: string, publicKey: string, account?: string): Promise<string> {
@@ -457,7 +472,21 @@ export class RepuxWeb3Api {
    */
   async waitForTransactionResult(transactionHash: string, timeInterval: number = 1000): Promise<TransactionReceipt> {
     return new Promise<any>((resolve, reject) => {
-      const makeAttempt = () => {
+      const makeAttempt = async () => {
+        const transactionExists = await new Promise(resolve => this._web3.eth.getTransaction(transactionHash, (err: any, transaction: any) => {
+          if (err) {
+            resolve(undefined);
+            return;
+          }
+
+          resolve(transaction);
+        }));
+
+        if (!transactionExists) {
+          clearInterval(interval);
+          return reject(new Error('Transaction dropped'));
+        }
+
         this._web3.eth.getTransactionReceipt(transactionHash, async (errTx: any, result: TransactionReceipt) => {
           if (errTx) {
             clearInterval(interval);
