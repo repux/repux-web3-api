@@ -65,6 +65,10 @@ export class RepuxWeb3Api {
   private _registry: any;
   private _token: any;
 
+  /**
+   * @param web3 - JavaScript Web3 API object (see: https://github.com/ethereum/web3.js/)
+   * @param contracts - Addresses of Registry and Token contracts
+   */
   constructor(web3: any, contracts: { REGISTRY_CONTRACT_ADDRESS: string, TOKEN_CONTRACT_ADDRESS: string }) {
     if (typeof web3 === 'undefined') {
       throw new Error('web3 instance is required!');
@@ -87,16 +91,18 @@ export class RepuxWeb3Api {
   }
 
   /**
-   * Return API version
+   * Returns API version
+   * @return API version
    */
-  static getVersion() {
+  static getVersion(): string {
     return packageConfig.version;
   }
 
   /**
    * Sets up contracts
+   * @return INIT_STATUS_ALREADY_INITIALIZED if already initialized, INIT_STATUS_INITIALIZED otherwise
    */
-  init() {
+  init(): Promise<number> {
     return new Promise((resolve, reject) => {
       if (this.initialized) {
         resolve(INIT_STATUS_ALREADY_INITIALIZED);
@@ -129,29 +135,8 @@ export class RepuxWeb3Api {
   }
 
   /**
-   * Returns Token contract instance
-   */
-  getTokenContract() {
-    if (!this.initialized) {
-      throw new Error(ERR_INIT);
-    }
-
-    return this._token;
-  }
-
-  /**
-   * Returns Registry contract instance
-   */
-  getRegistryContract() {
-    if (!this.initialized) {
-      throw new Error(ERR_INIT);
-    }
-
-    return this._registry;
-  }
-
-  /**
    * Returns default account
+   * @return default account address
    */
   getDefaultAccount(): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -166,8 +151,10 @@ export class RepuxWeb3Api {
 
   /**
    * Return account balance value
+   * @param account - account address, default: RepuxWeb3Api#getDefaultAccount
+   * @return specified account balance value
    */
-  async getBalance(account?: string) {
+  async getBalance(account?: string): Promise<BigNumber> {
     if (!account) {
       account = await this.getDefaultAccount();
     }
@@ -178,8 +165,9 @@ export class RepuxWeb3Api {
 
   /**
    * Returns network Id
+   * @return current network ID
    */
-  getNetworkId() {
+  getNetworkId(): Promise<number> {
     return new Promise((resolve, reject) => {
       this._web3.version.getNetwork((error: any, netId: string) => {
         if (error) {
@@ -192,6 +180,11 @@ export class RepuxWeb3Api {
 
   /**
    * Creates product contract
+   * @param metaFileHash - IPFS hash of meta file
+   * @param price - product price
+   * @param daysToDeliver - max days to finalise transaction
+   * @param account - account address, default: RepuxWeb3Api#getDefaultAccount
+   * @return Transaction hash (to see transaction result use: RepuxWeb3Api#waitForTransactionResult)
    */
   async createDataProduct(metaFileHash: string, price: BigNumber, daysToDeliver: number, account?: string): Promise<string> {
     if (!account) {
@@ -211,6 +204,8 @@ export class RepuxWeb3Api {
 
   /**
    * Returns DataProduct data
+   * @param dataProductAddress - product address
+   * @return DataProduct object
    */
   async getDataProduct(dataProductAddress: string): Promise<DataProduct> {
     const product = await DataProductContract.at(dataProductAddress);
@@ -240,6 +235,9 @@ export class RepuxWeb3Api {
 
   /**
    * Returns transaction on DataProduct by buyerAddress
+   * @param dataProductAddress - product address
+   * @param buyerAddress - buyer address
+   * @return DataProductOrder object
    */
   async getDataProductOrder(dataProductAddress: string, buyerAddress: string): Promise<DataProductOrder | undefined> {
     const product = await DataProductContract.at(dataProductAddress);
@@ -288,6 +286,9 @@ export class RepuxWeb3Api {
 
   /**
    * Approves token transfer for DataProduct purchase
+   * @param dataProductAddress - product address
+   * @param account - account address, default: RepuxWeb3Api#getDefaultAccount
+   * @return Transaction hash (to see transaction result use: RepuxWeb3Api#waitForTransactionResult)
    */
   async approveTokensTransferForDataProductPurchase(dataProductAddress: string, account?: string): Promise<string> {
     if (!account) {
@@ -304,6 +305,9 @@ export class RepuxWeb3Api {
 
   /**
    * Returns true if approveTokensTransferForDataProductPurchase is already called
+   * @param dataProductAddress - product address
+   * @param account - account address, default: RepuxWeb3Api#getDefaultAccount
+   * @return true if approved, false otherwise
    */
   async isTransferForPurchaseApproved(dataProductAddress: string, account?: string): Promise<Boolean> {
     if (!account) {
@@ -319,6 +323,10 @@ export class RepuxWeb3Api {
 
   /**
    * Purchases DataProduct
+   * @param dataProductAddress - product address
+   * @param publicKey - buyer public key (needed for file encryption)
+   * @param account - account address, default: RepuxWeb3Api#getDefaultAccount
+   * @return Transaction hash (to see transaction result use: RepuxWeb3Api#waitForTransactionResult)
    */
   async purchaseDataProduct(dataProductAddress: string, publicKey: string, account?: string): Promise<string> {
     if (!account) {
@@ -335,6 +343,11 @@ export class RepuxWeb3Api {
 
   /**
    * Finalises data product purchase
+   * @param dataProductAddress - product address
+   * @param buyerAddress - buyer address
+   * @param buyerMetaHash - IPFS file hash of meta file for re-encrypted file
+   * @param account - account address, default: RepuxWeb3Api#getDefaultAccount
+   * @return Transaction hash (to see transaction result use: RepuxWeb3Api#waitForTransactionResult)
    */
   async finaliseDataProductPurchase(
     dataProductAddress: string,
@@ -356,6 +369,8 @@ export class RepuxWeb3Api {
 
   /**
    * Returns products bought by provided account
+   * @param account - account address, default: RepuxWeb3Api#getDefaultAccount
+   * @return array of bought products addresses
    */
   async getBoughtDataProducts(account?: string): Promise<string[]> {
     if (!account) {
@@ -367,6 +382,8 @@ export class RepuxWeb3Api {
 
   /**
    * Returns products bought by provided account and approved
+   * @param account - account address, default: RepuxWeb3Api#getDefaultAccount
+   * @return array of bought and finalised products addresses
    */
   async getBoughtAndFinalisedDataProducts(account?: string): Promise<string[]> {
     if (!account) {
@@ -378,6 +395,8 @@ export class RepuxWeb3Api {
 
   /**
    * Returns products created by provided account
+   * @param account - account address, default: RepuxWeb3Api#getDefaultAccount
+   * @return array of created products addresses
    */
   async getCreatedDataProducts(account?: string): Promise<string[]> {
     if (!account) {
@@ -389,6 +408,9 @@ export class RepuxWeb3Api {
 
   /**
    * Withdraws funds from data product to owner account
+   * @param dataProductAddress - product address
+   * @param account - account address, default: RepuxWeb3Api#getDefaultAccount
+   * @return Transaction hash (to see transaction result use: RepuxWeb3Api#waitForTransactionResult)
    */
   async withdrawFundsFromDataProduct(dataProductAddress: string, account?: string): Promise<string> {
     if (!account) {
@@ -405,6 +427,9 @@ export class RepuxWeb3Api {
 
   /**
    * Disables Data Product
+   * @param dataProductAddress - product address
+   * @param account - account address, default: RepuxWeb3Api#getDefaultAccount
+   * @return Transaction hash (to see transaction result use: RepuxWeb3Api#waitForTransactionResult)
    */
   async disableDataProduct(dataProductAddress: string, account?: string): Promise<string> {
     if (!account) {
@@ -421,6 +446,9 @@ export class RepuxWeb3Api {
 
   /**
    * Cancels Data Product purchase (works only after deliveryDeadline)
+   * @param dataProductAddress - product address
+   * @param account - account address, default: RepuxWeb3Api#getDefaultAccount
+   * @return Transaction hash (to see transaction result use: RepuxWeb3Api#waitForTransactionResult)
    */
   async cancelDataProductPurchase(dataProductAddress: string, account?: string): Promise<string> {
     if (!account) {
@@ -437,6 +465,9 @@ export class RepuxWeb3Api {
 
   /**
    * Returns all buyers addresses by DataProduct address
+   * @param dataProductAddress - product address
+   * @param account - account address, default: RepuxWeb3Api#getDefaultAccount
+   * @return array of buyers addresses
    */
   async getDataProductBuyersAddresses(dataProductAddress: string, account?: string): Promise<string[]> {
     if (!account) {
@@ -453,6 +484,10 @@ export class RepuxWeb3Api {
 
   /**
    * Rates data product purchase transaction (can be called only by buyer)
+   * @param dataProductAddress - product address
+   * @param score - should be a number from 1 to 5
+   * @param account - account address, default: RepuxWeb3Api#getDefaultAccount
+   * @return Transaction hash (to see transaction result use: RepuxWeb3Api#waitForTransactionResult)
    */
   async rateDataProductPurchase(dataProductAddress: string, score: BigNumber, account?: string): Promise<string> {
     if (!account) {
@@ -469,6 +504,9 @@ export class RepuxWeb3Api {
 
   /**
    * Waits for transaction result and returns getTransactionReceipt
+   * @param transactionHash - hash of transaction to check
+   * @param timeInterval - time interval between status checks in milliseconds, default: 1000
+   * @result transaction receipt
    */
   async waitForTransactionResult(transactionHash: string, timeInterval: number = 1000): Promise<TransactionReceipt> {
     return new Promise<any>((resolve, reject) => {
@@ -504,5 +542,29 @@ export class RepuxWeb3Api {
       const interval = setInterval(makeAttempt, timeInterval);
       makeAttempt();
     });
+  }
+
+  /**
+   * Returns Token contract instance
+   * @return Token contract instance
+   */
+  private getTokenContract() {
+    if (!this.initialized) {
+      throw new Error(ERR_INIT);
+    }
+
+    return this._token;
+  }
+
+  /**
+   * Returns Registry contract instance
+   * @return Registry contract instance
+   */
+  private getRegistryContract() {
+    if (!this.initialized) {
+      throw new Error(ERR_INIT);
+    }
+
+    return this._registry;
   }
 }

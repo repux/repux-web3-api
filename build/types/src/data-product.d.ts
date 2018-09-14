@@ -1,6 +1,9 @@
 import BigNumber from 'bignumber.js';
 
 export interface DataProduct {
+  /**
+   * Product contract address
+   */
   address: string;
 
   /**

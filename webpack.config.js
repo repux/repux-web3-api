@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = env => {
     let entries = {};
-    entries['lib/index'] = ['./src/repux-web3-api.ts'];
+    entries['lib/index'] = ['./src/index.ts'];
 
     return {
         entry: entries,

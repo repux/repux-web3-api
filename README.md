@@ -1,5 +1,8 @@
 # RepuX Web3 API
 
+## API Reference
+API Reference is available [here](docs/README.md)
+
 ## Installation
 Execute `yarn` from project root.
 
@@ -29,7 +32,7 @@ To use watch:
 ## Example usage
 ```javascript
 import Web3 from 'web3';
-import RepuxWeb3Api from 'repux-web3-api';
+import { RepuxWeb3Api } from 'repux-web3-api';
 
 const web3 = new Web3(new Web3.providers.HttpProvider(config.ETH_NODE_URL));
 const repuxWeb3Api = new RepuxWeb3Api(web3, {
