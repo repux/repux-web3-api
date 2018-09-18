@@ -5,7 +5,7 @@
   "author": "RepuX <support@repux.io>",
   "license": "MIT",
   "main": "build/lib/index.js",
-  "types": "src/repux-web3-api.ts",
+  "types": "./build/types/src/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/repux/repux-web3-api.git"
@@ -25,7 +25,8 @@
     "dev": "WEBPACK_ENV=dev webpack --mode development --progress --colors --watch",
     "test": "karma start --single-run --browsers ChromeHeadless",
     "test:watch": "karma start --auto-watch --browsers ChromeHeadless",
-    "release": "semantic-release"
+    "release": "semantic-release",
+    "docs": "typedoc --theme markdown --mdEngine github --out ./docs/ --name \"API Reference\" --mode file --readme none --excludePrivate --excludeProtected --excludeExternals"
   },
   "devDependencies": {
     "@semantic-release/git": "^5.0.0",
@@ -57,6 +58,8 @@
     "bignumber.js": "^7.2.0",
     "fs-extra": "^7.0.0",
     "repux-smart-contracts": "git+ssh://git@github.com:repux/repux-smart-contracts#v1.2.1",
+    "typedoc": "^0.12.0",
+    "typedoc-plugin-markdown": "^1.1.15",
     "web3": "^0.20.6"
   }
 }

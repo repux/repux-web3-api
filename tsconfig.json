@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "moduleResolution": "node",
+    "declaration": true,
+    "declarationDir": "./build/types",
     "target": "es5",
     "module": "commonjs",
     "strict": true,

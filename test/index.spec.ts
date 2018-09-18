@@ -4,7 +4,7 @@ import {
   RepuxWeb3Api,
   INIT_STATUS_INITIALIZED,
   INIT_STATUS_ALREADY_INITIALIZED, TransactionStatus
-} from '../src/repux-web3-api';
+} from '../src';
 import BigNumber from 'bignumber.js';
 // @ts-ignore
 import Web3 from 'web3';
@@ -36,7 +36,7 @@ describe('RepuX Web3 API', () => {
 
   describe('constructor()', () => {
     it('should throw an error when parameters are missing', () => {
-      expect(() => new RepuxWeb3Api(undefined, <any> {})).to.throw('web3 instance is required!');
+      expect(() => new RepuxWeb3Api(<any> undefined, <any> {})).to.throw('web3 instance is required!');
     });
 
     it('should throw an error when Registry Contract address is not set', () => {
