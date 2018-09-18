@@ -31,7 +31,7 @@
 
 **● blockHash**: *`string`*
 
-*Defined in [src/transaction-receipt.ts:7](https://github.com/repux/repux-web3-api/blob/5ff278a/src/transaction-receipt.ts#L7)*
+*Defined in [src/transaction-receipt.ts:7](https://github.com/repux/repux-web3-api/blob/bb65574/src/transaction-receipt.ts#L7)*
 
 ___
 <a id="blocknumber"></a>
@@ -40,7 +40,7 @@ ___
 
 **● blockNumber**: *`number`*
 
-*Defined in [src/transaction-receipt.ts:8](https://github.com/repux/repux-web3-api/blob/5ff278a/src/transaction-receipt.ts#L8)*
+*Defined in [src/transaction-receipt.ts:8](https://github.com/repux/repux-web3-api/blob/bb65574/src/transaction-receipt.ts#L8)*
 
 ___
 <a id="contractaddress"></a>
@@ -50,7 +50,7 @@ ___
 **● contractAddress**: * `string` &#124; `null`
 *
 
-*Defined in [src/transaction-receipt.ts:11](https://github.com/repux/repux-web3-api/blob/5ff278a/src/transaction-receipt.ts#L11)*
+*Defined in [src/transaction-receipt.ts:11](https://github.com/repux/repux-web3-api/blob/bb65574/src/transaction-receipt.ts#L11)*
 
 ___
 <a id="cumulativegasused"></a>
@@ -59,7 +59,7 @@ ___
 
 **● cumulativeGasUsed**: *`number`*
 
-*Defined in [src/transaction-receipt.ts:10](https://github.com/repux/repux-web3-api/blob/5ff278a/src/transaction-receipt.ts#L10)*
+*Defined in [src/transaction-receipt.ts:10](https://github.com/repux/repux-web3-api/blob/bb65574/src/transaction-receipt.ts#L10)*
 
 ___
 <a id="gasused"></a>
@@ -68,7 +68,7 @@ ___
 
 **● gasUsed**: *`number`*
 
-*Defined in [src/transaction-receipt.ts:9](https://github.com/repux/repux-web3-api/blob/5ff278a/src/transaction-receipt.ts#L9)*
+*Defined in [src/transaction-receipt.ts:9](https://github.com/repux/repux-web3-api/blob/bb65574/src/transaction-receipt.ts#L9)*
 
 ___
 <a id="logs"></a>
@@ -77,7 +77,7 @@ ___
 
 **● logs**: *[TransactionLog](transactionlog.md)[]*
 
-*Defined in [src/transaction-receipt.ts:12](https://github.com/repux/repux-web3-api/blob/5ff278a/src/transaction-receipt.ts#L12)*
+*Defined in [src/transaction-receipt.ts:12](https://github.com/repux/repux-web3-api/blob/bb65574/src/transaction-receipt.ts#L12)*
 
 ___
 <a id="logsbloom"></a>
@@ -86,7 +86,7 @@ ___
 
 **● logsBloom**: *`string`*
 
-*Defined in [src/transaction-receipt.ts:14](https://github.com/repux/repux-web3-api/blob/5ff278a/src/transaction-receipt.ts#L14)*
+*Defined in [src/transaction-receipt.ts:14](https://github.com/repux/repux-web3-api/blob/bb65574/src/transaction-receipt.ts#L14)*
 
 ___
 <a id="status"></a>
@@ -95,7 +95,7 @@ ___
 
 **● status**: *[TransactionStatus](../enums/transactionstatus.md)*
 
-*Defined in [src/transaction-receipt.ts:13](https://github.com/repux/repux-web3-api/blob/5ff278a/src/transaction-receipt.ts#L13)*
+*Defined in [src/transaction-receipt.ts:13](https://github.com/repux/repux-web3-api/blob/bb65574/src/transaction-receipt.ts#L13)*
 
 ___
 <a id="transactionhash"></a>
@@ -104,7 +104,7 @@ ___
 
 **● transactionHash**: *`string`*
 
-*Defined in [src/transaction-receipt.ts:5](https://github.com/repux/repux-web3-api/blob/5ff278a/src/transaction-receipt.ts#L5)*
+*Defined in [src/transaction-receipt.ts:5](https://github.com/repux/repux-web3-api/blob/bb65574/src/transaction-receipt.ts#L5)*
 
 ___
 <a id="transactionindex"></a>
@@ -113,7 +113,7 @@ ___
 
 **● transactionIndex**: *`number`*
 
-*Defined in [src/transaction-receipt.ts:6](https://github.com/repux/repux-web3-api/blob/5ff278a/src/transaction-receipt.ts#L6)*
+*Defined in [src/transaction-receipt.ts:6](https://github.com/repux/repux-web3-api/blob/bb65574/src/transaction-receipt.ts#L6)*
 
 ___
 

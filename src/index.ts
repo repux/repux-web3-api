@@ -150,7 +150,7 @@ export class RepuxWeb3Api {
   }
 
   /**
-   * Return account balance value
+   * Return account REPUX balance value
    * @param account - account address, default: RepuxWeb3Api#getDefaultAccount
    * @return specified account balance value
    */
@@ -161,6 +161,29 @@ export class RepuxWeb3Api {
 
     const result = await this.getTokenContract().balanceOf.call(account);
     return new BigNumber(this._web3.fromWei(result));
+  }
+
+  /**
+   * Return account ETH balance value
+   * @param account - account address, default: RepuxWeb3Api#getDefaultAccount
+   * @return specified account balance value
+   */
+  async getEthBalance(account?: string): Promise<BigNumber> {
+    if (!account) {
+      account = await this.getDefaultAccount();
+    }
+
+    return new Promise<BigNumber>((resolve, reject) => {
+      this._web3.eth.getBalance(account, (error: any, result: BigNumber) => {
+        if (error) {
+          reject(error);
+
+          return;
+        }
+
+        resolve(new BigNumber(this._web3.fromWei(result)));
+      });
+    });
   }
 
   /**
