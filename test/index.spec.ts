@@ -117,6 +117,13 @@ describe('RepuX Web3 API', () => {
     });
   });
 
+  describe('getEthBalance()', () => {
+    it('should return user balance in ETH', async () => {
+      const balance = await repuxWeb3Api.getEthBalance();
+      expect(balance.isGreaterThanOrEqualTo(new BigNumber('0')));
+    });
+  });
+
   describe('getNetworkId()', () => {
     it('should return network identifier', async () => {
       const netId = await repuxWeb3Api.getNetworkId();

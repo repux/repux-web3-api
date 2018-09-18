@@ -29,6 +29,7 @@ Repux API
 * [getDataProductBuyersAddresses](repuxweb3api.md#getdataproductbuyersaddresses)
 * [getDataProductOrder](repuxweb3api.md#getdataproductorder)
 * [getDefaultAccount](repuxweb3api.md#getdefaultaccount)
+* [getEthBalance](repuxweb3api.md#getethbalance)
 * [getNetworkId](repuxweb3api.md#getnetworkid)
 * [init](repuxweb3api.md#init)
 * [isTransferForPurchaseApproved](repuxweb3api.md#istransferforpurchaseapproved)
@@ -48,7 +49,7 @@ Repux API
 
 ⊕ **new RepuxWeb3Api**(web3: *`any`*, contracts: *`object`*): [RepuxWeb3Api](repuxweb3api.md)
 
-*Defined in [src/index.ts:66](https://github.com/repux/repux-web3-api/blob/5ff278a/src/index.ts#L66)*
+*Defined in [src/index.ts:66](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L66)*
 
 **Parameters:**
 
@@ -69,7 +70,7 @@ ___
 
 ▸ **approveTokensTransferForDataProductPurchase**(dataProductAddress: *`string`*, account?: * `undefined` &#124; `string`*): `Promise`<`string`>
 
-*Defined in [src/index.ts:293](https://github.com/repux/repux-web3-api/blob/5ff278a/src/index.ts#L293)*
+*Defined in [src/index.ts:316](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L316)*
 
 Approves token transfer for DataProduct purchase
 
@@ -90,7 +91,7 @@ ___
 
 ▸ **cancelDataProductPurchase**(dataProductAddress: *`string`*, account?: * `undefined` &#124; `string`*): `Promise`<`string`>
 
-*Defined in [src/index.ts:453](https://github.com/repux/repux-web3-api/blob/5ff278a/src/index.ts#L453)*
+*Defined in [src/index.ts:476](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L476)*
 
 Cancels Data Product purchase (works only after deliveryDeadline)
 
@@ -111,7 +112,7 @@ ___
 
 ▸ **createDataProduct**(metaFileHash: *`string`*, price: *`BigNumber`*, daysToDeliver: *`number`*, account?: * `undefined` &#124; `string`*): `Promise`<`string`>
 
-*Defined in [src/index.ts:189](https://github.com/repux/repux-web3-api/blob/5ff278a/src/index.ts#L189)*
+*Defined in [src/index.ts:212](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L212)*
 
 Creates product contract
 
@@ -134,7 +135,7 @@ ___
 
 ▸ **disableDataProduct**(dataProductAddress: *`string`*, account?: * `undefined` &#124; `string`*): `Promise`<`string`>
 
-*Defined in [src/index.ts:434](https://github.com/repux/repux-web3-api/blob/5ff278a/src/index.ts#L434)*
+*Defined in [src/index.ts:457](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L457)*
 
 Disables Data Product
 
@@ -155,7 +156,7 @@ ___
 
 ▸ **finaliseDataProductPurchase**(dataProductAddress: *`string`*, buyerAddress: *`string`*, buyerMetaHash: *`string`*, account?: * `undefined` &#124; `string`*): `Promise`<`string`>
 
-*Defined in [src/index.ts:352](https://github.com/repux/repux-web3-api/blob/5ff278a/src/index.ts#L352)*
+*Defined in [src/index.ts:375](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L375)*
 
 Finalises data product purchase
 
@@ -178,9 +179,9 @@ ___
 
 ▸ **getBalance**(account?: * `undefined` &#124; `string`*): `Promise`<`BigNumber`>
 
-*Defined in [src/index.ts:157](https://github.com/repux/repux-web3-api/blob/5ff278a/src/index.ts#L157)*
+*Defined in [src/index.ts:157](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L157)*
 
-Return account balance value
+Return account REPUX balance value
 
 **Parameters:**
 
@@ -198,7 +199,7 @@ ___
 
 ▸ **getBoughtAndFinalisedDataProducts**(account?: * `undefined` &#124; `string`*): `Promise`<`string`[]>
 
-*Defined in [src/index.ts:388](https://github.com/repux/repux-web3-api/blob/5ff278a/src/index.ts#L388)*
+*Defined in [src/index.ts:411](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L411)*
 
 Returns products bought by provided account and approved
 
@@ -218,7 +219,7 @@ ___
 
 ▸ **getBoughtDataProducts**(account?: * `undefined` &#124; `string`*): `Promise`<`string`[]>
 
-*Defined in [src/index.ts:375](https://github.com/repux/repux-web3-api/blob/5ff278a/src/index.ts#L375)*
+*Defined in [src/index.ts:398](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L398)*
 
 Returns products bought by provided account
 
@@ -238,7 +239,7 @@ ___
 
 ▸ **getCreatedDataProducts**(account?: * `undefined` &#124; `string`*): `Promise`<`string`[]>
 
-*Defined in [src/index.ts:401](https://github.com/repux/repux-web3-api/blob/5ff278a/src/index.ts#L401)*
+*Defined in [src/index.ts:424](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L424)*
 
 Returns products created by provided account
 
@@ -258,7 +259,7 @@ ___
 
 ▸ **getDataProduct**(dataProductAddress: *`string`*): `Promise`<[DataProduct](../interfaces/dataproduct.md)>
 
-*Defined in [src/index.ts:210](https://github.com/repux/repux-web3-api/blob/5ff278a/src/index.ts#L210)*
+*Defined in [src/index.ts:233](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L233)*
 
 Returns DataProduct data
 
@@ -278,7 +279,7 @@ ___
 
 ▸ **getDataProductBuyersAddresses**(dataProductAddress: *`string`*, account?: * `undefined` &#124; `string`*): `Promise`<`string`[]>
 
-*Defined in [src/index.ts:472](https://github.com/repux/repux-web3-api/blob/5ff278a/src/index.ts#L472)*
+*Defined in [src/index.ts:495](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L495)*
 
 Returns all buyers addresses by DataProduct address
 
@@ -299,7 +300,7 @@ ___
 
 ▸ **getDataProductOrder**(dataProductAddress: *`string`*, buyerAddress: *`string`*): `Promise`< [DataProductOrder](../interfaces/dataproductorder.md) &#124; `undefined`>
 
-*Defined in [src/index.ts:242](https://github.com/repux/repux-web3-api/blob/5ff278a/src/index.ts#L242)*
+*Defined in [src/index.ts:265](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L265)*
 
 Returns transaction on DataProduct by buyerAddress
 
@@ -320,12 +321,32 @@ ___
 
 ▸ **getDefaultAccount**(): `Promise`<`string`>
 
-*Defined in [src/index.ts:141](https://github.com/repux/repux-web3-api/blob/5ff278a/src/index.ts#L141)*
+*Defined in [src/index.ts:141](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L141)*
 
 Returns default account
 
 **Returns:** `Promise`<`string`>
 default account address
+
+___
+<a id="getethbalance"></a>
+
+###  getEthBalance
+
+▸ **getEthBalance**(account?: * `undefined` &#124; `string`*): `Promise`<`BigNumber`>
+
+*Defined in [src/index.ts:171](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L171)*
+
+Return account ETH balance value
+
+**Parameters:**
+
+| Param | Type | Description |
+| ------ | ------ | ------ |
+| `Optional` account |  `undefined` &#124; `string`|  account address, default: RepuxWeb3Api#getDefaultAccount |
+
+**Returns:** `Promise`<`BigNumber`>
+specified account balance value
 
 ___
 <a id="getnetworkid"></a>
@@ -334,7 +355,7 @@ ___
 
 ▸ **getNetworkId**(): `Promise`<`number`>
 
-*Defined in [src/index.ts:170](https://github.com/repux/repux-web3-api/blob/5ff278a/src/index.ts#L170)*
+*Defined in [src/index.ts:193](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L193)*
 
 Returns network Id
 
@@ -348,7 +369,7 @@ ___
 
 ▸ **init**(): `Promise`<`number`>
 
-*Defined in [src/index.ts:105](https://github.com/repux/repux-web3-api/blob/5ff278a/src/index.ts#L105)*
+*Defined in [src/index.ts:105](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L105)*
 
 Sets up contracts
 
@@ -362,7 +383,7 @@ ___
 
 ▸ **isTransferForPurchaseApproved**(dataProductAddress: *`string`*, account?: * `undefined` &#124; `string`*): `Promise`<`Boolean`>
 
-*Defined in [src/index.ts:312](https://github.com/repux/repux-web3-api/blob/5ff278a/src/index.ts#L312)*
+*Defined in [src/index.ts:335](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L335)*
 
 Returns true if approveTokensTransferForDataProductPurchase is already called
 
@@ -383,7 +404,7 @@ ___
 
 ▸ **purchaseDataProduct**(dataProductAddress: *`string`*, publicKey: *`string`*, account?: * `undefined` &#124; `string`*): `Promise`<`string`>
 
-*Defined in [src/index.ts:331](https://github.com/repux/repux-web3-api/blob/5ff278a/src/index.ts#L331)*
+*Defined in [src/index.ts:354](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L354)*
 
 Purchases DataProduct
 
@@ -405,7 +426,7 @@ ___
 
 ▸ **rateDataProductPurchase**(dataProductAddress: *`string`*, score: *`BigNumber`*, account?: * `undefined` &#124; `string`*): `Promise`<`string`>
 
-*Defined in [src/index.ts:492](https://github.com/repux/repux-web3-api/blob/5ff278a/src/index.ts#L492)*
+*Defined in [src/index.ts:515](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L515)*
 
 Rates data product purchase transaction (can be called only by buyer)
 
@@ -427,7 +448,7 @@ ___
 
 ▸ **waitForTransactionResult**(transactionHash: *`string`*, timeInterval?: *`number`*): `Promise`<[TransactionReceipt](../interfaces/transactionreceipt.md)>
 
-*Defined in [src/index.ts:511](https://github.com/repux/repux-web3-api/blob/5ff278a/src/index.ts#L511)*
+*Defined in [src/index.ts:534](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L534)*
 
 Waits for transaction result and returns getTransactionReceipt
 *__result__*: transaction receipt
@@ -448,7 +469,7 @@ ___
 
 ▸ **withdrawFundsFromDataProduct**(dataProductAddress: *`string`*, account?: * `undefined` &#124; `string`*): `Promise`<`string`>
 
-*Defined in [src/index.ts:415](https://github.com/repux/repux-web3-api/blob/5ff278a/src/index.ts#L415)*
+*Defined in [src/index.ts:438](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L438)*
 
 Withdraws funds from data product to owner account
 
@@ -469,7 +490,7 @@ ___
 
 ▸ **getVersion**(): `string`
 
-*Defined in [src/index.ts:97](https://github.com/repux/repux-web3-api/blob/5ff278a/src/index.ts#L97)*
+*Defined in [src/index.ts:97](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L97)*
 
 Returns API version
 

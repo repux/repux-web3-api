@@ -29,7 +29,7 @@
 
 **● address**: *`string`*
 
-*Defined in [src/transaction-log.ts:6](https://github.com/repux/repux-web3-api/blob/5ff278a/src/transaction-log.ts#L6)*
+*Defined in [src/transaction-log.ts:6](https://github.com/repux/repux-web3-api/blob/bb65574/src/transaction-log.ts#L6)*
 
 ___
 <a id="blockhash"></a>
@@ -38,7 +38,7 @@ ___
 
 **● blockHash**: *`string`*
 
-*Defined in [src/transaction-log.ts:5](https://github.com/repux/repux-web3-api/blob/5ff278a/src/transaction-log.ts#L5)*
+*Defined in [src/transaction-log.ts:5](https://github.com/repux/repux-web3-api/blob/bb65574/src/transaction-log.ts#L5)*
 
 ___
 <a id="data"></a>
@@ -47,7 +47,7 @@ ___
 
 **● data**: *`string`*
 
-*Defined in [src/transaction-log.ts:7](https://github.com/repux/repux-web3-api/blob/5ff278a/src/transaction-log.ts#L7)*
+*Defined in [src/transaction-log.ts:7](https://github.com/repux/repux-web3-api/blob/bb65574/src/transaction-log.ts#L7)*
 
 ___
 <a id="logindex"></a>
@@ -56,7 +56,7 @@ ___
 
 **● logIndex**: *`number`*
 
-*Defined in [src/transaction-log.ts:2](https://github.com/repux/repux-web3-api/blob/5ff278a/src/transaction-log.ts#L2)*
+*Defined in [src/transaction-log.ts:2](https://github.com/repux/repux-web3-api/blob/bb65574/src/transaction-log.ts#L2)*
 
 ___
 <a id="topics"></a>
@@ -65,7 +65,7 @@ ___
 
 **● topics**: *`string`[]*
 
-*Defined in [src/transaction-log.ts:8](https://github.com/repux/repux-web3-api/blob/5ff278a/src/transaction-log.ts#L8)*
+*Defined in [src/transaction-log.ts:8](https://github.com/repux/repux-web3-api/blob/bb65574/src/transaction-log.ts#L8)*
 
 ___
 <a id="transactionhash"></a>
@@ -74,7 +74,7 @@ ___
 
 **● transactionHash**: *`string`*
 
-*Defined in [src/transaction-log.ts:4](https://github.com/repux/repux-web3-api/blob/5ff278a/src/transaction-log.ts#L4)*
+*Defined in [src/transaction-log.ts:4](https://github.com/repux/repux-web3-api/blob/bb65574/src/transaction-log.ts#L4)*
 
 ___
 <a id="transactionindex"></a>
@@ -83,7 +83,7 @@ ___
 
 **● transactionIndex**: *`number`*
 
-*Defined in [src/transaction-log.ts:3](https://github.com/repux/repux-web3-api/blob/5ff278a/src/transaction-log.ts#L3)*
+*Defined in [src/transaction-log.ts:3](https://github.com/repux/repux-web3-api/blob/bb65574/src/transaction-log.ts#L3)*
 
 ___
 <a id="type"></a>
@@ -92,7 +92,7 @@ ___
 
 **● type**: *`string`*
 
-*Defined in [src/transaction-log.ts:9](https://github.com/repux/repux-web3-api/blob/5ff278a/src/transaction-log.ts#L9)*
+*Defined in [src/transaction-log.ts:9](https://github.com/repux/repux-web3-api/blob/bb65574/src/transaction-log.ts#L9)*
 
 ___
 

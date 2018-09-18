@@ -50,11 +50,17 @@ export declare class RepuxWeb3Api {
      */
     getDefaultAccount(): Promise<string>;
     /**
-     * Return account balance value
+     * Return account REPUX balance value
      * @param account - account address, default: RepuxWeb3Api#getDefaultAccount
      * @return specified account balance value
      */
     getBalance(account?: string): Promise<BigNumber>;
+    /**
+     * Return account ETH balance value
+     * @param account - account address, default: RepuxWeb3Api#getDefaultAccount
+     * @return specified account balance value
+     */
+    getEthBalance(account?: string): Promise<BigNumber>;
     /**
      * Returns network Id
      * @return current network ID
