@@ -34,7 +34,7 @@
 
 **● address**: *`string`*
 
-*Defined in [src/data-product-order.ts:7](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product-order.ts#L7)*
+*Defined in [src/data-product-order.ts:7](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product-order.ts#L7)*
 
 Order contract address
 
@@ -45,7 +45,7 @@ ___
 
 **● buyerAddress**: *`string`*
 
-*Defined in [src/data-product-order.ts:17](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product-order.ts#L17)*
+*Defined in [src/data-product-order.ts:17](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product-order.ts#L17)*
 
 Buyer address
 
@@ -56,7 +56,7 @@ ___
 
 **● buyerMetaHash**: *`string`*
 
-*Defined in [src/data-product-order.ts:27](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product-order.ts#L27)*
+*Defined in [src/data-product-order.ts:27](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product-order.ts#L27)*
 
 IPFS hash of meta file for re-encrypted product
 
@@ -67,7 +67,7 @@ ___
 
 **● dataProductAddress**: *`string`*
 
-*Defined in [src/data-product-order.ts:12](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product-order.ts#L12)*
+*Defined in [src/data-product-order.ts:12](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product-order.ts#L12)*
 
 Product contract address
 
@@ -78,7 +78,7 @@ ___
 
 **● deliveryDeadline**: *`Date`*
 
-*Defined in [src/data-product-order.ts:37](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product-order.ts#L37)*
+*Defined in [src/data-product-order.ts:37](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product-order.ts#L37)*
 
 Date until Order finalisation is available
 
@@ -89,7 +89,7 @@ ___
 
 **● fee**: *`BigNumber`*
 
-*Defined in [src/data-product-order.ts:47](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product-order.ts#L47)*
+*Defined in [src/data-product-order.ts:47](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product-order.ts#L47)*
 
 Order fee
 
@@ -100,7 +100,7 @@ ___
 
 **● finalised**: *`boolean`*
 
-*Defined in [src/data-product-order.ts:57](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product-order.ts#L57)*
+*Defined in [src/data-product-order.ts:57](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product-order.ts#L57)*
 
 If true, Order is finalised
 
@@ -111,7 +111,7 @@ ___
 
 **● price**: *`BigNumber`*
 
-*Defined in [src/data-product-order.ts:42](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product-order.ts#L42)*
+*Defined in [src/data-product-order.ts:42](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product-order.ts#L42)*
 
 Product price
 
@@ -122,7 +122,7 @@ ___
 
 **● publicKey**: *`string`*
 
-*Defined in [src/data-product-order.ts:22](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product-order.ts#L22)*
+*Defined in [src/data-product-order.ts:22](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product-order.ts#L22)*
 
 Buyer public key (needed for file encryption)
 
@@ -133,7 +133,7 @@ ___
 
 **● purchased**: *`boolean`*
 
-*Defined in [src/data-product-order.ts:52](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product-order.ts#L52)*
+*Defined in [src/data-product-order.ts:52](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product-order.ts#L52)*
 
 If true, Order is purchased
 
@@ -144,7 +144,7 @@ ___
 
 **● rateDeadline**: *`Date`*
 
-*Defined in [src/data-product-order.ts:32](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product-order.ts#L32)*
+*Defined in [src/data-product-order.ts:32](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product-order.ts#L32)*
 
 Date until Order rating is available
 
@@ -155,7 +155,7 @@ ___
 
 **● rated**: *`boolean`*
 
-*Defined in [src/data-product-order.ts:62](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product-order.ts#L62)*
+*Defined in [src/data-product-order.ts:62](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product-order.ts#L62)*
 
 If true, order is rated
 
@@ -166,7 +166,7 @@ ___
 
 **● rating**: *`BigNumber`*
 
-*Defined in [src/data-product-order.ts:67](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product-order.ts#L67)*
+*Defined in [src/data-product-order.ts:67](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product-order.ts#L67)*
 
 Order rating (from 1 to 5)
 

@@ -7,6 +7,6 @@
         "assets": ["package.json", "yarn.lock"],
         "message": "chore(release): ${nextRelease.version}"
     }],
-    "verifyConditions": ["@semantic-release/github"],
-    "publish": ["@semantic-release/github"]
+    "verifyConditions": ["@semantic-release/npm", "@semantic-release/github"],
+    "publish": ["@semantic-release/npm", "@semantic-release/github"]
 }
