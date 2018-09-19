@@ -1,3 +1,6 @@
+/**
+ * Enum contains types of product actions
+ */
 export enum DataProductUpdateAction {
   CREATE,
   UPDATE,
