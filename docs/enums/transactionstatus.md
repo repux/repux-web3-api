@@ -21,7 +21,7 @@ Enum contains types of blockchain transaction statuses
 
 **FAILED**: 
 
-*Defined in [src/transaction-status.ts:5](https://github.com/repux/repux-web3-api/blob/bb65574/src/transaction-status.ts#L5)*
+*Defined in [src/transaction-status.ts:5](https://github.com/repux/repux-web3-api/blob/47534a6/src/transaction-status.ts#L5)*
 
 ___
 <a id="successful"></a>
@@ -30,7 +30,7 @@ ___
 
 **SUCCESSFUL**: 
 
-*Defined in [src/transaction-status.ts:6](https://github.com/repux/repux-web3-api/blob/bb65574/src/transaction-status.ts#L6)*
+*Defined in [src/transaction-status.ts:6](https://github.com/repux/repux-web3-api/blob/47534a6/src/transaction-status.ts#L6)*
 
 ___
 

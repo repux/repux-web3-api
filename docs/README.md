@@ -50,7 +50,7 @@
 
 **● DataProductContract**: *`any`*
 
-*Defined in [src/index.ts:40](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L40)*
+*Defined in [src/index.ts:40](https://github.com/repux/repux-web3-api/blob/47534a6/src/index.ts#L40)*
 
 ___
 <a id="err_init"></a>
@@ -59,7 +59,7 @@ ___
 
 **● ERR_INIT**: *"Please initialize library first using &#x60;init()&#x60; method"* = "Please initialize library first using `init()` method"
 
-*Defined in [src/index.ts:36](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L36)*
+*Defined in [src/index.ts:36](https://github.com/repux/repux-web3-api/blob/47534a6/src/index.ts#L36)*
 
 ___
 <a id="init_status_already_initialized"></a>
@@ -68,7 +68,7 @@ ___
 
 **● INIT_STATUS_ALREADY_INITIALIZED**: *`1`* = 1
 
-*Defined in [src/index.ts:34](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L34)*
+*Defined in [src/index.ts:34](https://github.com/repux/repux-web3-api/blob/47534a6/src/index.ts#L34)*
 
 ___
 <a id="init_status_initialized"></a>
@@ -77,7 +77,7 @@ ___
 
 **● INIT_STATUS_INITIALIZED**: *`0`* = 0
 
-*Defined in [src/index.ts:33](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L33)*
+*Defined in [src/index.ts:33](https://github.com/repux/repux-web3-api/blob/47534a6/src/index.ts#L33)*
 
 ___
 <a id="ordercontract"></a>
@@ -86,7 +86,7 @@ ___
 
 **● OrderContract**: *`any`*
 
-*Defined in [src/index.ts:41](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L41)*
+*Defined in [src/index.ts:41](https://github.com/repux/repux-web3-api/blob/47534a6/src/index.ts#L41)*
 
 ___
 <a id="product_creation_gas_limit"></a>
@@ -95,7 +95,7 @@ ___
 
 **● PRODUCT_CREATION_GAS_LIMIT**: *`4000000`* = 4000000
 
-*Defined in [src/index.ts:25](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L25)*
+*Defined in [src/index.ts:25](https://github.com/repux/repux-web3-api/blob/47534a6/src/index.ts#L25)*
 
 ___
 <a id="product_deletion_gas_limit"></a>
@@ -104,7 +104,7 @@ ___
 
 **● PRODUCT_DELETION_GAS_LIMIT**: *`4000000`* = 4000000
 
-*Defined in [src/index.ts:26](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L26)*
+*Defined in [src/index.ts:26](https://github.com/repux/repux-web3-api/blob/47534a6/src/index.ts#L26)*
 
 ___
 <a id="product_purchase_approve_gas_limit"></a>
@@ -113,7 +113,7 @@ ___
 
 **● PRODUCT_PURCHASE_APPROVE_GAS_LIMIT**: *`4000000`* = 4000000
 
-*Defined in [src/index.ts:28](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L28)*
+*Defined in [src/index.ts:28](https://github.com/repux/repux-web3-api/blob/47534a6/src/index.ts#L28)*
 
 ___
 <a id="product_purchase_cancel_gas_limit"></a>
@@ -122,7 +122,7 @@ ___
 
 **● PRODUCT_PURCHASE_CANCEL_GAS_LIMIT**: *`4000000`* = 4000000
 
-*Defined in [src/index.ts:29](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L29)*
+*Defined in [src/index.ts:29](https://github.com/repux/repux-web3-api/blob/47534a6/src/index.ts#L29)*
 
 ___
 <a id="product_purchase_gas_limit"></a>
@@ -131,7 +131,7 @@ ___
 
 **● PRODUCT_PURCHASE_GAS_LIMIT**: *`4000000`* = 4000000
 
-*Defined in [src/index.ts:27](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L27)*
+*Defined in [src/index.ts:27](https://github.com/repux/repux-web3-api/blob/47534a6/src/index.ts#L27)*
 
 ___
 <a id="product_purchase_rate_gas_limit"></a>
@@ -140,7 +140,7 @@ ___
 
 **● PRODUCT_PURCHASE_RATE_GAS_LIMIT**: *`4000000`* = 4000000
 
-*Defined in [src/index.ts:31](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L31)*
+*Defined in [src/index.ts:31](https://github.com/repux/repux-web3-api/blob/47534a6/src/index.ts#L31)*
 
 ___
 <a id="product_withdraw_gas_limit"></a>
@@ -149,7 +149,7 @@ ___
 
 **● PRODUCT_WITHDRAW_GAS_LIMIT**: *`4000000`* = 4000000
 
-*Defined in [src/index.ts:30](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L30)*
+*Defined in [src/index.ts:30](https://github.com/repux/repux-web3-api/blob/47534a6/src/index.ts#L30)*
 
 ___
 <a id="registrycontract"></a>
@@ -158,7 +158,7 @@ ___
 
 **● RegistryContract**: *`any`*
 
-*Defined in [src/index.ts:38](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L38)*
+*Defined in [src/index.ts:38](https://github.com/repux/repux-web3-api/blob/47534a6/src/index.ts#L38)*
 
 ___
 <a id="tokencontract"></a>
@@ -167,7 +167,7 @@ ___
 
 **● TokenContract**: *`any`*
 
-*Defined in [src/index.ts:39](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L39)*
+*Defined in [src/index.ts:39](https://github.com/repux/repux-web3-api/blob/47534a6/src/index.ts#L39)*
 
 ___
 
@@ -179,7 +179,7 @@ ___
 
 ▸ **fixTruffleContractCompatibilityIssue**(web3: *`any`*): `any`
 
-*Defined in [src/index.ts:45](https://github.com/repux/repux-web3-api/blob/bb65574/src/index.ts#L45)*
+*Defined in [src/index.ts:45](https://github.com/repux/repux-web3-api/blob/47534a6/src/index.ts#L45)*
 
 **Parameters:**
 

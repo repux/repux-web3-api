@@ -1,5 +1,5 @@
 {
-  "name": "repux-web3-api",
+  "name": "@repux/repux-web3-api",
   "version": "1.5.1",
   "description": "Smart Contract RepuX API",
   "author": "RepuX <support@repux.io>",
@@ -20,13 +20,16 @@
     "protocol"
   ],
   "scripts": {
-    "postinstall": "node contract-builder",
+    "prebuild": "node contract-builder",
     "build": "WEBPACK_ENV=build webpack --mode production",
     "dev": "WEBPACK_ENV=dev webpack --mode development --progress --colors --watch",
     "test": "karma start --single-run --browsers ChromeHeadless",
     "test:watch": "karma start --auto-watch --browsers ChromeHeadless",
     "release": "semantic-release",
     "docs": "typedoc --theme markdown --mdEngine github --out ./docs/ --name \"API Reference\" --mode file --readme none --excludePrivate --excludeProtected --excludeExternals"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "devDependencies": {
     "@semantic-release/git": "^5.0.0",
@@ -35,6 +38,7 @@
     "@types/node": "^10.5.4",
     "awesome-typescript-loader": "^5.2.0",
     "chai": "^4.1.2",
+    "fs-extra": "^7.0.0",
     "karma": "^2.0.2",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.2.0",
@@ -46,20 +50,19 @@
     "karma-typescript": "^3.0.12",
     "karma-webpack": "^3.0.0",
     "mocha": "^5.1.1",
+    "repux-smart-contracts": "git+ssh://git@github.com:repux/repux-smart-contracts#v1.2.1",
     "semantic-release": "^15.4.0",
     "truffle-contract": "^3.0.5",
     "tslint": "^5.10.0",
     "tslint-eslint-rules": "^5.3.1",
+    "typedoc": "^0.12.0",
+    "typedoc-plugin-markdown": "^1.1.15",
     "typescript": "^3.0.1",
     "webpack": "^4.8.3",
     "webpack-cli": "^2.1.3"
   },
   "dependencies": {
     "bignumber.js": "^7.2.0",
-    "fs-extra": "^7.0.0",
-    "repux-smart-contracts": "git+ssh://git@github.com:repux/repux-smart-contracts#v1.2.1",
-    "typedoc": "^0.12.0",
-    "typedoc-plugin-markdown": "^1.1.15",
     "web3": "^0.20.6"
   }
 }

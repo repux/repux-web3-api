@@ -27,7 +27,7 @@ Enum contains types of product actions
 
 **CANCEL_PURCHASE**: 
 
-*Defined in [src/data-product-update-action.ts:9](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product-update-action.ts#L9)*
+*Defined in [src/data-product-update-action.ts:9](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product-update-action.ts#L9)*
 
 ___
 <a id="cancel_rating"></a>
@@ -36,7 +36,7 @@ ___
 
 **CANCEL_RATING**: 
 
-*Defined in [src/data-product-update-action.ts:12](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product-update-action.ts#L12)*
+*Defined in [src/data-product-update-action.ts:12](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product-update-action.ts#L12)*
 
 ___
 <a id="create"></a>
@@ -45,7 +45,7 @@ ___
 
 **CREATE**: 
 
-*Defined in [src/data-product-update-action.ts:5](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product-update-action.ts#L5)*
+*Defined in [src/data-product-update-action.ts:5](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product-update-action.ts#L5)*
 
 ___
 <a id="delete"></a>
@@ -54,7 +54,7 @@ ___
 
 **DELETE**: 
 
-*Defined in [src/data-product-update-action.ts:7](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product-update-action.ts#L7)*
+*Defined in [src/data-product-update-action.ts:7](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product-update-action.ts#L7)*
 
 ___
 <a id="finalise"></a>
@@ -63,7 +63,7 @@ ___
 
 **FINALISE**: 
 
-*Defined in [src/data-product-update-action.ts:10](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product-update-action.ts#L10)*
+*Defined in [src/data-product-update-action.ts:10](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product-update-action.ts#L10)*
 
 ___
 <a id="purchase"></a>
@@ -72,7 +72,7 @@ ___
 
 **PURCHASE**: 
 
-*Defined in [src/data-product-update-action.ts:8](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product-update-action.ts#L8)*
+*Defined in [src/data-product-update-action.ts:8](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product-update-action.ts#L8)*
 
 ___
 <a id="rate"></a>
@@ -81,7 +81,7 @@ ___
 
 **RATE**: 
 
-*Defined in [src/data-product-update-action.ts:11](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product-update-action.ts#L11)*
+*Defined in [src/data-product-update-action.ts:11](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product-update-action.ts#L11)*
 
 ___
 <a id="update"></a>
@@ -90,7 +90,7 @@ ___
 
 **UPDATE**: 
 
-*Defined in [src/data-product-update-action.ts:6](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product-update-action.ts#L6)*
+*Defined in [src/data-product-update-action.ts:6](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product-update-action.ts#L6)*
 
 ___
 

@@ -28,7 +28,7 @@
 
 **● address**: *`string`*
 
-*Defined in [src/data-product.ts:4](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product.ts#L4)*
+*Defined in [src/data-product.ts:4](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product.ts#L4)*
 
 ___
 <a id="buyersdeposit"></a>
@@ -37,7 +37,7 @@ ___
 
 **● buyersDeposit**: *`BigNumber`*
 
-*Defined in [src/data-product.ts:24](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product.ts#L24)*
+*Defined in [src/data-product.ts:24](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product.ts#L24)*
 
 Funds locked until order finalisation
 
@@ -48,7 +48,7 @@ ___
 
 **● disabled**: *`boolean`*
 
-*Defined in [src/data-product.ts:34](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product.ts#L34)*
+*Defined in [src/data-product.ts:34](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product.ts#L34)*
 
 If true, product is disabled
 
@@ -59,7 +59,7 @@ ___
 
 **● fundsAccumulated**: *`BigNumber`*
 
-*Defined in [src/data-product.ts:29](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product.ts#L29)*
+*Defined in [src/data-product.ts:29](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product.ts#L29)*
 
 Funds accumulated on product contract
 
@@ -70,7 +70,7 @@ ___
 
 **● owner**: *`string`*
 
-*Defined in [src/data-product.ts:9](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product.ts#L9)*
+*Defined in [src/data-product.ts:9](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product.ts#L9)*
 
 Product owner address
 
@@ -81,7 +81,7 @@ ___
 
 **● price**: *`BigNumber`*
 
-*Defined in [src/data-product.ts:14](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product.ts#L14)*
+*Defined in [src/data-product.ts:14](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product.ts#L14)*
 
 Product price
 
@@ -92,7 +92,7 @@ ___
 
 **● sellerMetaHash**: *`string`*
 
-*Defined in [src/data-product.ts:19](https://github.com/repux/repux-web3-api/blob/bb65574/src/data-product.ts#L19)*
+*Defined in [src/data-product.ts:19](https://github.com/repux/repux-web3-api/blob/47534a6/src/data-product.ts#L19)*
 
 IPFS hash of meta file
 
