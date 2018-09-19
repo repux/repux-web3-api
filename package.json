@@ -1,6 +1,6 @@
 {
   "name": "@repux/repux-web3-api",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "description": "Smart Contract RepuX API",
   "author": "RepuX <support@repux.io>",
   "license": "MIT",
